@@ -42,7 +42,7 @@ body{
     font-family:'Inter',sans-serif;
     background:var(--bg);
     color:var(--text);
-    cursor:none; /* Custom Arrow Cursor */
+    cursor:none; 
 }
 
 /* Custom Black/Neon Arrow Cursor */
@@ -59,34 +59,27 @@ body{
 
 /* Dynamic Interactive Background */
 body::before{
-    content:'';
-    position:fixed;
-    inset:0;
+    content:''; position:fixed; inset:0;
     background:
     radial-gradient(circle 600px at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0, 245, 255, 0.12), transparent 60%),
     radial-gradient(circle at 85% 30%, rgba(155, 92, 255, 0.08), transparent 40%),
     radial-gradient(circle at 20% 90%, rgba(255, 0, 200, 0.08), transparent 40%);
-    z-index:-3;
-    will-change: background;
+    z-index:-3; will-change: background;
 }
 
 /* Perspective Grid */
 .grid-container {
-    position: fixed; inset: 0;
-    z-index: -2; perspective: 1000px;
-    pointer-events: none;
+    position: fixed; inset: 0; z-index: -2; perspective: 1000px; pointer-events: none;
 }
 
 .grid{
-    position:absolute; width: 200%; height: 200%;
-    top: -50%; left: -50%;
+    position:absolute; width: 200%; height: 200%; top: -50%; left: -50%;
     background-image:
     linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
     background-size: 50px 50px;
     transform: rotateX(60deg) translateY(0);
-    animation: gridMove 15s linear infinite;
-    will-change: transform;
+    animation: gridMove 15s linear infinite; will-change: transform;
 }
 
 @keyframes gridMove{
@@ -102,10 +95,8 @@ body::before{
 .diamond {
     position: absolute;
     background: linear-gradient(135deg, rgba(0, 245, 255, 0.6), rgba(155, 92, 255, 0.6));
-    box-shadow: 0 0 20px var(--cyan);
-    transform: rotate(45deg); opacity: 0;
-    animation: floatDiamond linear infinite;
-    will-change: transform, opacity;
+    box-shadow: 0 0 20px var(--cyan); transform: rotate(45deg); opacity: 0;
+    animation: floatDiamond linear infinite; will-change: transform, opacity;
 }
 @keyframes floatDiamond {
     0% { transform: translate3d(0, 100vh, 0) rotate(45deg) scale(0); opacity: 0; }
@@ -116,13 +107,10 @@ body::before{
 
 /* Localized 3D Glass Dent (Pressure Effect) */
 .glass-dent {
-    position: fixed;
-    width: 140px; height: 140px;
-    border-radius: 50%;
+    position: fixed; width: 140px; height: 140px; border-radius: 50%;
     background: radial-gradient(circle, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 50%, transparent 80%);
     box-shadow: inset 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 245, 255, 0.2);
-    backdrop-filter: blur(10px) brightness(0.6);
-    -webkit-backdrop-filter: blur(10px) brightness(0.6);
+    backdrop-filter: blur(10px) brightness(0.6); -webkit-backdrop-filter: blur(10px) brightness(0.6);
     transform: translate(-50%, -50%) scale(1);
     pointer-events: none; z-index: 9998;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
@@ -130,12 +118,9 @@ body::before{
 
 /* Sparkle Effect */
 .sparkle {
-    position: fixed; width: 4px; height: 4px;
-    background: #fff; border-radius: 50%;
-    pointer-events: none; z-index: 9998;
-    box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--pink);
-    animation: sparkleAnim 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    will-change: transform, opacity;
+    position: fixed; width: 4px; height: 4px; background: #fff; border-radius: 50%;
+    pointer-events: none; z-index: 9998; box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--pink);
+    animation: sparkleAnim 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards; will-change: transform, opacity;
 }
 @keyframes sparkleAnim {
     0% { transform: scale(1.5) translate3d(0, 0, 0); opacity: 1; }
@@ -143,105 +128,122 @@ body::before{
 }
 
 /* ----------------------------------------------------- */
+/* AI CHATBOT UI                                         */
+/* ----------------------------------------------------- */
+#chat-widget {
+    position: fixed; bottom: 20px; right: 20px; width: 350px; height: 450px;
+    background: rgba(4, 8, 22, 0.85); border: 1px solid var(--cyan);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-radius: 15px; box-shadow: 0 10px 40px rgba(0, 245, 255, 0.2);
+    display: flex; flex-direction: column; z-index: 10000;
+    transform: translateY(150%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+}
+#chat-widget.active { transform: translateY(0); }
+
+#chat-header {
+    padding: 15px; background: rgba(0, 245, 255, 0.1); border-bottom: 1px solid var(--glass-border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Orbitron', sans-serif; color: var(--cyan); font-weight: bold; font-size: 1rem;
+}
+#close-chat {
+    background: none; border: none; color: var(--red); font-size: 1.5rem; cursor: pointer;
+    transition: 0.3s; line-height: 1;
+}
+#close-chat:hover { text-shadow: 0 0 10px var(--red); transform: scale(1.2); }
+
+#chat-messages {
+    flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
+}
+#chat-messages::-webkit-scrollbar { width: 5px; }
+#chat-messages::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 5px; }
+
+.message { padding: 10px 15px; border-radius: 10px; font-size: 0.9rem; line-height: 1.5; max-width: 85%; animation: popIn 0.3s ease; }
+@keyframes popIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.ai-message { background: rgba(0, 245, 255, 0.1); color: #fff; align-self: flex-start; border-left: 3px solid var(--cyan); }
+.user-message { background: rgba(155, 92, 255, 0.1); color: #fff; align-self: flex-end; border-right: 3px solid var(--purple); }
+
+#chat-input-area {
+    padding: 15px; border-top: 1px solid var(--glass-border); display: flex; gap: 10px;
+}
+#chat-input {
+    flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
+    color: #fff; padding: 10px; border-radius: 8px; outline: none; font-family: 'Inter', sans-serif;
+}
+#chat-input:focus { border-color: var(--cyan); }
+#send-chat {
+    background: var(--cyan); color: #000; border: none; padding: 10px 15px; border-radius: 8px;
+    font-weight: bold; cursor: pointer; transition: 0.3s;
+}
+#send-chat:hover { box-shadow: 0 0 15px var(--cyan); }
+
+#chat-toggle-btn {
+    position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    cursor: pointer; box-shadow: 0 0 20px rgba(0, 245, 255, 0.4); z-index: 9999;
+    transition: 0.3s; font-size: 24px; color: #000; font-family: 'Orbitron';
+}
+#chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(155, 92, 255, 0.6); }
+
+/* ----------------------------------------------------- */
 /* MINI-GAME: STEALTH PROTOCOL (HIDE & SEEK CYBER GAME)  */
 /* ----------------------------------------------------- */
 #hud-score {
-    position: fixed; bottom: 25px; left: 25px;
-    background: rgba(4, 8, 22, 0.85);
-    border: 1px solid var(--glass-border);
-    border-left: 3px solid var(--purple);
-    backdrop-filter: blur(10px);
-    padding: 12px 20px; border-radius: 8px;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 0.9rem; z-index: 1000;
-    box-shadow: 0 0 20px rgba(155, 92, 255, 0.2);
-    letter-spacing: 1px;
+    position: fixed; bottom: 25px; left: 25px; background: rgba(4, 8, 22, 0.85);
+    border: 1px solid var(--glass-border); border-left: 3px solid var(--purple);
+    backdrop-filter: blur(10px); padding: 12px 20px; border-radius: 8px;
+    font-family: 'Orbitron', sans-serif; font-size: 0.9rem; z-index: 1000;
+    box-shadow: 0 0 20px rgba(155, 92, 255, 0.2); letter-spacing: 1px;
 }
 
-/* Active Camouflage Cloak - Hard to see, distorts background */
 .stealth-ghost {
-    position: fixed;
-    width: 60px; height: 60px;
-    border-radius: 50%;
-    /* Barely visible gradient */
+    position: fixed; width: 60px; height: 60px; border-radius: 50%;
     background: radial-gradient(circle, rgba(255,255,255,0.01), transparent);
-    /* Heavy distortion to act as a cloak */
-    backdrop-filter: blur(12px) contrast(1.2) saturate(1.5);
-    -webkit-backdrop-filter: blur(12px) contrast(1.2) saturate(1.5);
-    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.02);
-    cursor: crosshair !important;
-    z-index: 9996;
-    opacity: 0;
-    transform: scale(0.8);
-    /* Slowly pulses in and out of full invisibility */
-    animation: ghostPulse 6s ease-in-out infinite alternate;
-    transition: transform 0.3s;
+    backdrop-filter: blur(12px) contrast(1.2) saturate(1.5); -webkit-backdrop-filter: blur(12px) contrast(1.2) saturate(1.5);
+    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.02);
+    cursor: crosshair !important; z-index: 9996; opacity: 0; transform: scale(0.8);
+    animation: ghostPulse 6s ease-in-out infinite alternate; transition: transform 0.3s;
 }
-
-.stealth-ghost:hover {
-    box-shadow: inset 0 0 20px rgba(0, 245, 255, 0.2);
-    border-color: rgba(0, 245, 255, 0.3);
-}
+.stealth-ghost:hover { box-shadow: inset 0 0 20px rgba(0, 245, 255, 0.2); border-color: rgba(0, 245, 255, 0.3); }
 
 @keyframes ghostPulse {
     0% { opacity: 0; transform: scale(0.8); }
-    30% { opacity: 1; transform: scale(1.1); } /* 100% of the backdrop filter, making the distortion visible */
+    30% { opacity: 1; transform: scale(1.1); } 
     50% { opacity: 0; transform: scale(0.9); }
     80% { opacity: 1; transform: scale(1.2); }
     100% { opacity: 0; transform: scale(0.8); }
 }
 
-/* Revealed State */
 .stealth-ghost.detected {
-    animation: none;
-    opacity: 1 !important;
-    background: rgba(0, 245, 255, 0.2);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border: 2px solid var(--cyan);
-    box-shadow: 0 0 30px var(--cyan), inset 0 0 20px var(--cyan);
-    color: #fff;
-    display: flex; justify-content: center; align-items: center;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 10px; font-weight: bold;
-    text-shadow: 0 0 5px #fff;
-    pointer-events: none;
+    animation: none; opacity: 1 !important; background: rgba(0, 245, 255, 0.2);
+    backdrop-filter: none; -webkit-backdrop-filter: none; border: 2px solid var(--cyan);
+    box-shadow: 0 0 30px var(--cyan), inset 0 0 20px var(--cyan); color: #fff;
+    display: flex; justify-content: center; align-items: center; font-family: 'Orbitron', sans-serif;
+    font-size: 10px; font-weight: bold; text-shadow: 0 0 5px #fff; pointer-events: none;
 }
 
 /* ----------------------------------------------------- */
 /* NEW TEXT & CSS ANIMATIONS                             */
 /* ----------------------------------------------------- */
-
-/* Cyber Glow Breathing effect for Main Titles */
-.cyber-glow-text {
-    animation: textBreathe 3s ease-in-out infinite alternate;
-}
+.cyber-glow-text { animation: textBreathe 3s ease-in-out infinite alternate; }
 @keyframes textBreathe {
     0% { text-shadow: 0 0 10px rgba(0, 245, 255, 0.2), 0 0 20px rgba(155, 92, 255, 0.2); }
     100% { text-shadow: 0 0 20px rgba(0, 245, 255, 0.6), 0 0 40px rgba(155, 92, 255, 0.4); }
 }
 
-/* Typewriter Effect for Subtitle */
 .typewriter-wrapper {
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
+    display: inline-block; overflow: hidden; white-space: nowrap;
     border-right: 3px solid var(--cyan);
     animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
-    max-width: 100%; /* Prevents breaking on mobile */
+    max-width: 100%;
 }
 @keyframes typing { from { width: 0 } to { width: 100% } }
 @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--cyan); } }
 
-/* Floating Animation for Glass Cards */
-.floating-card {
-    animation: cardFloat 6s ease-in-out infinite alternate;
-}
-@keyframes cardFloat {
-    0% { transform: translateY(0px); }
-    100% { transform: translateY(-8px); }
-}
+.floating-card { animation: cardFloat 6s ease-in-out infinite alternate; }
+@keyframes cardFloat { 0% { transform: translateY(0px); } 100% { transform: translateY(-8px); } }
 
 /* Navbar */
 nav{
@@ -262,31 +264,31 @@ nav.hidden-top { transform: translateY(-100%); }
 
 .nav-links{ display:flex; gap:30px; }
 .nav-links a{
-    color: var(--muted); text-decoration:none; transition:.3s;
-    position:relative; font-size: 0.90rem; font-weight: 500;
-    letter-spacing: 1px; text-transform: uppercase; cursor: none;
+    color: var(--muted); text-decoration:none; transition:.3s; position:relative;
+    font-size: 0.90rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: none;
 }
 .nav-links a::after{
     content:''; position:absolute; left: 50%; bottom:-5px; width: 0; height: 2px;
-    background:linear-gradient(90deg,var(--cyan),var(--purple));
-    transition: all .3s ease; transform: translateX(-50%); box-shadow: 0 0 10px var(--cyan);
+    background:linear-gradient(90deg,var(--cyan),var(--purple)); transition: all .3s ease;
+    transform: translateX(-50%); box-shadow: 0 0 10px var(--cyan);
 }
 .nav-links a:hover{ color: #fff; text-shadow: 0 0 10px var(--cyan); }
 .nav-links a:hover::after{ width: 100%; }
 
-.menu-btn {
-    display: none; color: var(--cyan); font-size: 28px; cursor: pointer;
-    text-shadow: 0 0 10px var(--cyan);
-}
+.menu-btn { display: none; color: var(--cyan); font-size: 28px; cursor: pointer; text-shadow: 0 0 10px var(--cyan); }
 
-/* Sections */
-section{ padding:130px 8% 80px; }
-.container{ max-width:1200px; margin:auto; }
+/* Sections & Containers (Updated for Section Hover 3D) */
+section { padding:130px 8% 80px; position: relative; }
+.container { 
+    max-width:1200px; margin:auto; 
+    /* Ensures the entire section container can tilt smoothly */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: preserve-3d;
+}
 
 .section-title{
     font-size:2.8rem; margin-bottom:60px; font-family:'Orbitron',sans-serif;
-    position:relative; display:inline-block; color: #fff;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    position:relative; display:inline-block; color: #fff; text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 .section-title::after{
     content:''; position:absolute; left:0; bottom:-12px; width:40%; height:4px;
@@ -297,18 +299,17 @@ section{ padding:130px 8% 80px; }
 /* Hero */
 .hero{ min-height:100vh; display:flex; align-items:center; }
 .hero-content{ display:grid; grid-template-columns:1.2fr .8fr; gap:60px; align-items:center; }
-.hero-text h1{ font-size:4.8rem; line-height:1.15; margin-bottom:20px; font-family:'Orbitron',sans-serif; }
+.hero-text h1{ font-size:4.8rem; line-height:1.15; margin-bottom:20px; font-family:'Orbitron',sans-serif; transform: translateZ(30px); }
 .gradient{ background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.hero-text h3{ color:var(--cyan); font-size:1.3rem; margin-bottom:25px; font-weight: 400; letter-spacing: 1px; }
-.hero-text p{ color:var(--muted); line-height:1.9; margin-bottom:40px; font-size: 1.1rem; }
+.hero-text h3{ color:var(--cyan); font-size:1.3rem; margin-bottom:25px; font-weight: 400; letter-spacing: 1px; transform: translateZ(20px);}
+.hero-text p{ color:var(--muted); line-height:1.9; margin-bottom:40px; font-size: 1.1rem; transform: translateZ(10px);}
 
 /* Buttons */
-.buttons{ display:flex; gap:20px; flex-wrap:wrap; }
+.buttons{ display:flex; gap:20px; flex-wrap:wrap; transform: translateZ(15px); }
 .btn{
-    padding:16px 36px; border-radius: 50px; text-decoration:none;
-    font-weight:600; transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    letter-spacing: 1px; text-transform: uppercase; font-size: 0.9rem; cursor: none;
-    position: relative; overflow: hidden;
+    padding:16px 36px; border-radius: 50px; text-decoration:none; font-weight:600;
+    transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275); letter-spacing: 1px;
+    text-transform: uppercase; font-size: 0.9rem; cursor: none; position: relative; overflow: hidden;
 }
 .btn-primary{ background:linear-gradient(90deg,var(--cyan),var(--purple)); color:#000; box-shadow: 0 0 20px rgba(0,245,255,.4), inset 0 0 10px rgba(255, 255, 255, 0.5); border: none; }
 .btn-outline{ background: rgba(0, 245, 255, 0.05); border: 1px solid var(--cyan); color: var(--cyan); backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(0, 245, 255, 0.1); }
@@ -316,7 +317,6 @@ section{ padding:130px 8% 80px; }
 .btn-primary:hover { box-shadow: 0 0 40px rgba(0,245,255,.6), inset 0 0 15px rgba(255, 255, 255, 0.8); }
 .btn-outline:hover { background: rgba(0, 245, 255, 0.15); box-shadow: 0 0 25px rgba(0, 245, 255, 0.4); color: #fff; }
 
-/* Button Shine Sweep Animation */
 .btn::after {
     content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
@@ -325,7 +325,7 @@ section{ padding:130px 8% 80px; }
 .btn:hover::after { left: 150%; }
 
 /* Profile Image */
-.hero-image{ display:flex; justify-content:center; position:relative; }
+.hero-image{ display:flex; justify-content:center; position:relative; transform: translateZ(40px); }
 .hero-image::before{
     content:''; position:absolute; width: 100%; height: 100%; border-radius:50%;
     background:linear-gradient(45deg,var(--cyan),var(--purple),var(--pink)); filter:blur(50px);
@@ -361,7 +361,7 @@ section{ padding:130px 8% 80px; }
     border-color: rgba(0, 245, 255, 0.3);
 }
 .glass h3 { color: #fff; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); transform: translateZ(20px); }
-.glass p { color: var(--muted); line-height: 1.8; transform: translateZ(10px); }
+.glass p, .glass ul, .glass div { color: var(--muted); line-height: 1.8; transform: translateZ(10px); }
 
 /* Grids & Tags */
 .about-grid, .skills-grid, .projects-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:35px; }
@@ -374,14 +374,10 @@ section{ padding:130px 8% 80px; }
 .contact-links{ display:flex; justify-content:center; gap:20px; margin-top:40px; flex-wrap:wrap; transform: translateZ(20px); }
 footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px solid var(--glass-border); background: rgba(4, 8, 22, 0.8); backdrop-filter: blur(10px); font-size: 0.9rem; letter-spacing: 1px; }
 
-/* Scroll Animation Reveal Classes (Smoother Staggered Slides) */
+/* Scroll Animation Reveal Classes */
 .hidden{ opacity:0; transform:translateY(60px) scale(0.95); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform, opacity; }
 .show{ opacity:1; transform:translateY(0) scale(1); }
-
-/* Delay classes for staggered grid loading */
-.delay-1 { transition-delay: 0.1s; }
-.delay-2 { transition-delay: 0.2s; }
-.delay-3 { transition-delay: 0.3s; }
+.delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; }
 
 /* ========================================= */
 /* ANDROID & MOBILE RESPONSIVE LAYOUT FIXES  */
@@ -395,7 +391,9 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
     .hero-text h1{ font-size: 3.2rem; }
     .hero-image img{ width: 280px; height: 280px; }
     .buttons{ justify-content:center; }
-    .typewriter-wrapper { white-space: normal; animation: none; border: none; } /* Disable typewriter on mobile to prevent overflow */
+    .typewriter-wrapper { white-space: normal; animation: none; border: none; } 
+    #chat-toggle-btn { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 20px; }
+    #chat-widget { width: 90%; right: 5%; bottom: 80px; }
 }
 
 @media(max-width:600px){
@@ -414,11 +412,11 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
     .contact-links .btn { width: 100%; }
 }
 
-/* Disable Custom Cursors & Effects on Touch Devices (Android/iOS) to prevent lag/bugs */
+/* Disable Custom Cursors & 3D Effects on Touch Devices (Android/iOS) to prevent lag */
 @media (hover: none) and (pointer: coarse) {
     .cursor, .sparkle { display: none !important; }
     body, a, .btn, .tag, .menu-btn { cursor: auto !important; }
-    .glass { transform: none !important; transition: none !important; animation: none !important; } 
+    .glass, .container { transform: none !important; transition: none !important; animation: none !important; } 
     .floating-card { animation: none !important; }
 }
 
@@ -432,6 +430,22 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
 
 <div id="hud-score">
     STEALTH THREATS INTERCEPTED: <span id="score-val" style="color: var(--purple); font-weight: bold; font-size: 1.1rem; text-shadow: 0 0 10px var(--purple);">0</span>
+</div>
+
+<div id="chat-toggle-btn">AI</div>
+
+<div id="chat-widget">
+    <div id="chat-header">
+        <span>AI ASSISTANT</span>
+        <button id="close-chat">&times;</button>
+    </div>
+    <div id="chat-messages">
+        <div class="message ai-message">Initializing secure connection... Hello! I am Saurabh's AI assistant. Ask me anything about his skills, experience, or projects.</div>
+    </div>
+    <div id="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Type your query...">
+        <button id="send-chat">SEND</button>
+    </div>
 </div>
 
 <div class="cursor" id="custom-cursor"></div>
@@ -452,20 +466,18 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
 </nav>
 
 
-<section class="hero">
+<section class="hero" id="hero-sec">
     <div class="container hero-content">
         <div class="hero-text hidden">
             <h1 class="cyber-glow-text">
             Cybersecurity <br>
             <span class="gradient">Analyst & Developer</span>
             </h1>
-            
             <h3>
                 <div class="typewriter-wrapper">
                 SOC Analyst • Network & System Engineer • Full Stack Developer
                 </div>
             </h3>
-            
             <p>
             Passionate cybersecurity analyst with hands-on experience in SIEM monitoring,
             incident response, threat hunting, penetration testing, and secure application development.
@@ -659,17 +671,129 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
 
 
 <script>
-/* Hide Navbar securely when scrolling down */
+/* ========================================= */
+/* 1. SECURE API & AI CHATBOT LOGIC          */
+/* ========================================= */
+const chatToggleBtn = document.getElementById('chat-toggle-btn');
+const chatWidget = document.getElementById('chat-widget');
+const closeChatBtn = document.getElementById('close-chat');
+const sendChatBtn = document.getElementById('send-chat');
+const chatInput = document.getElementById('chat-input');
+const chatMessages = document.getElementById('chat-messages');
+
+// User's provided Google Studio API Key
+const GEMINI_API_KEY = "AIzaSyBev3MdvHRovPiGqErXyJqvpZUaIL6I9bI"; 
+
+chatToggleBtn.addEventListener('click', () => { chatWidget.classList.add('active'); });
+closeChatBtn.addEventListener('click', () => { chatWidget.classList.remove('active'); });
+
+async function sendChatToGemini() {
+    const userText = chatInput.value.trim();
+    if(!userText) return;
+
+    // Display user message
+    const userDiv = document.createElement('div');
+    userDiv.className = 'message user-message';
+    userDiv.innerText = userText;
+    chatMessages.appendChild(userDiv);
+    chatInput.value = '';
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Display 'Typing...' AI message
+    const aiDiv = document.createElement('div');
+    aiDiv.className = 'message ai-message';
+    aiDiv.innerText = "Analyzing query...";
+    chatMessages.appendChild(aiDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    // Pre-prompt context to make the AI act like Saurabh's assistant
+    const contextPrompt = `You are a helpful, professional AI assistant for Saurabh Bhati, a Cybersecurity Analyst and Developer. Answer briefly and politely. User asks: ${userText}`;
+
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: contextPrompt }] }]
+            })
+        });
+
+        const data = await response.json();
+        const reply = data.candidates[0].content.parts[0].text;
+        aiDiv.innerText = reply;
+    } catch (error) {
+        aiDiv.innerText = "Connection error. Secure firewall blocked the request.";
+    }
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+sendChatBtn.addEventListener('click', sendChatToGemini);
+chatInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendChatToGemini(); });
+
+
+/* ========================================= */
+/* 2. ENTIRE SECTION PARALLAX 3D MOVEMENT    */
+/* ========================================= */
+const sections = document.querySelectorAll('section');
+sections.forEach(sec => {
+    sec.addEventListener('mousemove', (e) => {
+        if(window.innerWidth > 900) {
+            const container = sec.querySelector('.container');
+            if(!container) return;
+            const rect = sec.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            // Subtle tilt for the entire section container
+            const rotateX = ((y - centerY) / centerY) * -3; 
+            const rotateY = ((x - centerX) / centerX) * 3;
+            
+            container.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        }
+    });
+    
+    sec.addEventListener('mouseleave', () => {
+        if(window.innerWidth > 900) {
+            const container = sec.querySelector('.container');
+            if(container) container.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg)`;
+        }
+    });
+});
+
+/* 3. INDIVIDUAL GLASS CARD 3D TILT */
+const cards = document.querySelectorAll('.glass');
+cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        if(window.innerWidth > 900) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -8; 
+            const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 8;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+        }
+    });
+    card.addEventListener('mouseleave', () => {
+        if(window.innerWidth > 900) card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    });
+});
+
+/* ========================================= */
+/* 4. SCROLL & NAVIGATION FIXES              */
+/* ========================================= */
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
     if (window.scrollY > 10) { navbar.classList.add('hidden-top'); } 
     else { navbar.classList.remove('hidden-top'); }
 });
 
-/* Mobile Menu Toggle */
 function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
 
-/* Dynamic Arrow Cursor & Background Tracking */
+/* ========================================= */
+/* 5. DYNAMIC CURSOR & BACKGROUND TRACKING   */
+/* ========================================= */
 const cursor = document.getElementById('custom-cursor');
 const root = document.documentElement;
 let mouseX = window.innerWidth / 2;
@@ -677,7 +801,6 @@ let mouseY = window.innerHeight / 2;
 let isMoving = false;
 
 window.addEventListener('mousemove', (e) => {
-    // Only apply if custom cursor is active (prevents mobile bugs)
     if(window.innerWidth > 900 || window.matchMedia("(pointer: fine)").matches) {
         mouseX = e.clientX; mouseY = e.clientY;
         cursor.style.left = mouseX + 'px';
@@ -706,42 +829,19 @@ window.addEventListener('mousemove', (e) => {
 });
 
 /* Interactive Elements Cursor State */
-const interactables = document.querySelectorAll('a, .btn, .menu-btn, .tag');
+const interactables = document.querySelectorAll('a, .btn, .menu-btn, .tag, #chat-toggle-btn');
 interactables.forEach(el => {
     el.addEventListener('mouseenter', () => { if(window.innerWidth > 900) cursor.style.transform = 'scale(1.5)'; });
     el.addEventListener('mouseleave', () => { if(window.innerWidth > 900) cursor.style.transform = 'scale(1)'; });
 });
 
-/* 3D Glass Card Tilt Effect (Only on Desktop) */
-const cards = document.querySelectorAll('.glass');
-cards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-        if(window.innerWidth > 900) {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -8; 
-            const rotateY = ((x - centerX) / centerX) * 8;
-            // Preserving the floating animation via parent class, so we only rotate the internal state
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-        }
-    });
-    card.addEventListener('mouseleave', () => {
-        if(window.innerWidth > 900) {
-            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-        }
-    });
-});
-
-/* LOCALIZED 3D Glass Click Pressure Effect */
+/* ========================================= */
+/* 6. LOCALIZED 3D GLASS CLICK PRESSURE      */
+/* ========================================= */
 let currentDent = null;
 window.addEventListener('mousedown', (e) => {
-    // Ignore if clicking on a ghost node
-    if(e.target.classList.contains('stealth-ghost')) return;
+    if(e.target.closest('.stealth-ghost, #chat-widget, #chat-toggle-btn')) return;
 
-    // Create deep glass dent exactly where clicked
     currentDent = document.createElement('div');
     currentDent.className = 'glass-dent';
     currentDent.style.left = e.clientX + 'px';
@@ -750,7 +850,6 @@ window.addEventListener('mousedown', (e) => {
     
     if(window.innerWidth > 900) cursor.style.transform = 'scale(0.8)';
     
-    // Physically push cards/buttons backwards
     const interactive = e.target.closest('.glass, .btn');
     if(interactive && window.innerWidth > 900) {
         interactive.style.transform += ' scale3d(0.95, 0.95, 0.95)';
@@ -759,7 +858,6 @@ window.addEventListener('mousedown', (e) => {
 });
 
 window.addEventListener('mouseup', () => {
-    // Release dent effect
     if(currentDent) {
         currentDent.style.opacity = '0';
         currentDent.style.transform = 'translate(-50%, -50%) scale(1.5)';
@@ -770,16 +868,15 @@ window.addEventListener('mouseup', () => {
     
     if(window.innerWidth > 900) cursor.style.transform = 'scale(1)';
     
-    // Release card physical press
     document.querySelectorAll('[data-pressed="true"]').forEach(el => {
         el.style.transform = el.style.transform.replace(' scale3d(0.95, 0.95, 0.95)', '');
         el.dataset.pressed = "false";
     });
 });
 
-/* ----------------------------------------------------- */
-/* MINI-GAME MECHANICS: HIDE AND SEEK "STEALTH PROTOCOL" */
-/* ----------------------------------------------------- */
+/* ========================================= */
+/* 7. HIDE AND SEEK "STEALTH PROTOCOL" GAME  */
+/* ========================================= */
 let stealthScore = 0;
 const scoreDisplay = document.getElementById('score-val');
 
@@ -787,38 +884,32 @@ function spawnGhostNode() {
     const ghost = document.createElement('div');
     ghost.className = 'stealth-ghost';
     
-    // Random position within screen bounds
     const startX = Math.random() * (window.innerWidth - 100);
     const startY = Math.random() * (window.innerHeight - 100);
     ghost.style.left = startX + 'px';
     ghost.style.top = startY + 'px';
     
-    // Random drift using CSS translate
-    const driftX = (Math.random() - 0.5) * 200; // Drift range -100px to 100px
+    const driftX = (Math.random() - 0.5) * 200; 
     const driftY = (Math.random() - 0.5) * 200;
     
-    // Force a reflow to apply transition
     setTimeout(() => {
         ghost.style.transform = `translate(${driftX}px, ${driftY}px) scale(1)`;
         ghost.style.transition = "transform 6s linear";
     }, 50);
 
     ghost.onmousedown = (e) => {
-        e.stopPropagation(); // Stop background dent
+        e.stopPropagation(); 
         if(ghost.classList.contains('detected')) return;
         
-        // Mark as Caught/Detected
         ghost.classList.add('detected');
         ghost.innerText = 'DETECTED';
         ghost.style.transform += ' scale(1.5)';
         
-        // Update HUD
         stealthScore++;
         scoreDisplay.innerText = stealthScore;
         scoreDisplay.style.transform = "scale(1.5)";
         setTimeout(() => scoreDisplay.style.transform = "scale(1)", 200);
         
-        // Shatter into particles
         for(let i=0; i<15; i++){
             let s = document.createElement('div');
             s.className = 'sparkle';
@@ -826,7 +917,6 @@ function spawnGhostNode() {
             s.style.boxShadow = '0 0 15px var(--cyan), 0 0 30px #fff';
             s.style.width = (Math.random() * 4 + 2) + 'px';
             s.style.height = s.style.width;
-            // Explode from mouse position
             s.style.left = e.clientX + 'px'; 
             s.style.top = e.clientY + 'px';
             s.style.setProperty('--tx', (Math.random() * 200 - 100) + 'px');
@@ -835,7 +925,6 @@ function spawnGhostNode() {
             setTimeout(() => s.remove(), 700);
         }
         
-        // Fade out node
         setTimeout(() => {
             ghost.style.opacity = '0';
             setTimeout(() => ghost.remove(), 300);
@@ -844,7 +933,6 @@ function spawnGhostNode() {
     
     document.body.appendChild(ghost);
     
-    // If not caught, disappear after cycle finishes
     setTimeout(() => {
         if(ghost.parentElement && !ghost.classList.contains('detected')) {
             ghost.style.opacity = '0';
@@ -853,7 +941,6 @@ function spawnGhostNode() {
     }, 6000);
 }
 
-// Spawn stealth nodes every 4 seconds
 setInterval(spawnGhostNode, 4000);
 
 /* Background Floating Diamonds */
@@ -871,12 +958,10 @@ if(window.innerWidth > 900) {
     }
 }
 
-/* Scroll Reveal Intersection Observer - Refined with staggering */
+/* Scroll Reveal Intersection Observer */
 const observer = new IntersectionObserver((entries)=>{
     entries.forEach((entry)=>{
-        if(entry.isIntersecting){ 
-            entry.target.classList.add('show'); 
-        }
+        if(entry.isIntersecting){ entry.target.classList.add('show'); }
     });
 }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
 
