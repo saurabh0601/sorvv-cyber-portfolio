@@ -167,120 +167,98 @@ sendChatBtn.addEventListener('click', sendDemoChat);
 chatInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendDemoChat(); });
 
 /* ========================================= */
-/* 6. BACKGROUND AUTONOMOUS SNAKE GAME AI    */
+/* 6. CYBER CONSTELLATION INTERACTIVE BG     */
 /* ========================================= */
-const canvas = document.getElementById('snake-bg');
+const canvas = document.getElementById('network-bg');
 const ctx = canvas.getContext('2d');
-
-let cols, rows;
-const gridSize = 25; 
-let snake = [{x: 10, y: 10}];
-let snakeLength = 5;
-let virus = {x: 20, y: 20};
-let dir = {x: 1, y: 0};
+let particles = [];
+const particleCount = window.innerWidth > 900 ? 80 : 30; // Fewer particles on mobile
 
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    cols = Math.floor(canvas.width / gridSize);
-    rows = Math.floor(canvas.height / gridSize);
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
-function spawnVirus() {
-    virus = {
-        x: Math.floor(Math.random() * cols),
-        y: Math.floor(Math.random() * rows)
-    };
-}
-spawnVirus();
-
-function updateSnake() {
-    if(window.innerWidth <= 600) return; // Disable background snake logic on mobile to save battery
-    
-    let head = snake[0];
-
-    // Cyber Worm Pathfinding AI
-    let dx = virus.x - head.x;
-    let dy = virus.y - head.y;
-
-    // Decide whether to move horizontally or vertically based on distance to virus
-    if (Math.abs(dx) > Math.abs(dy)) {
-        if (dx > 0 && dir.x !== -1) dir = {x: 1, y: 0};
-        else if (dx < 0 && dir.x !== 1) dir = {x: -1, y: 0};
-        else if (dy > 0 && dir.y !== -1) dir = {x: 0, y: 1};
-        else if (dy < 0 && dir.y !== 1) dir = {x: 0, y: -1};
-    } else {
-        if (dy > 0 && dir.y !== -1) dir = {x: 0, y: 1};
-        else if (dy < 0 && dir.y !== 1) dir = {x: 0, y: -1};
-        else if (dx > 0 && dir.x !== -1) dir = {x: 1, y: 0};
-        else if (dx < 0 && dir.x !== 1) dir = {x: -1, y: 0};
+class Particle {
+    constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 1;
+        this.vy = (Math.random() - 0.5) * 1;
+        this.size = Math.random() * 2 + 1;
+        // Alternating cyan and purple nodes
+        this.color = Math.random() > 0.5 ? 'rgba(0, 245, 255, ' : 'rgba(155, 92, 255, ';
     }
-
-    let newX = head.x + dir.x;
-    let newY = head.y + dir.y;
-
-    // Seamless Wall Wrapping (Continuous cyber world)
-    if (newX >= cols) newX = 0;
-    if (newX < 0) newX = cols - 1;
-    if (newY >= rows) newY = 0;
-    if (newY < 0) newY = rows - 1;
-
-    snake.unshift({x: newX, y: newY});
-
-    // Check if snake ate the virus
-    if (newX === virus.x && newY === virus.y) {
-        snakeLength += 3; // Grow slightly longer
-        spawnVirus();
+    update() {
+        this.x += this.vx;
+        this.y += this.vy;
         
-        // Minor visual pop effect on the background when virus is eaten
-        document.getElementById('snake-bg').style.opacity = '0.8';
-        setTimeout(() => document.getElementById('snake-bg').style.opacity = '0.6', 150);
+        // Bounce off edges
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
     }
-
-    // Trim snake tail
-    while (snake.length > snakeLength) {
-        snake.pop();
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color + '0.8)';
+        ctx.fill();
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = this.color + '1)';
     }
 }
 
-function drawSnakeGame() {
-    if(window.innerWidth <= 600) return; // Skip drawing on mobile
-    
+for (let i = 0; i < particleCount; i++) {
+    particles.push(new Particle());
+}
+
+function animateNetwork() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw the Red Virus (Food)
-    ctx.fillStyle = '#ff003c';
-    ctx.shadowBlur = 20;
-    ctx.shadowColor = '#ff003c';
-    ctx.beginPath();
-    ctx.arc(virus.x * gridSize + gridSize/2, virus.y * gridSize + gridSize/2, gridSize/2 - 4, 0, Math.PI*2);
-    ctx.fill();
-
-    // Draw the Neon Cyan Snake
-    ctx.fillStyle = '#00f5ff';
-    ctx.shadowBlur = 15;
-    ctx.shadowColor = '#00f5ff';
     
-    for (let i = 0; i < snake.length; i++) {
-        // Snake fades out near the tail
-        ctx.globalAlpha = 1 - (i / snake.length);
+    // Disable heavy drawing on mobile to save battery
+    if(window.innerWidth <= 600) return requestAnimationFrame(animateNetwork);
+    
+    particles.forEach(p => {
+        p.update();
+        p.draw();
+    });
+    
+    // Draw connecting lines
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            if (dist < 120) {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - dist/1200})`;
+                ctx.lineWidth = 1;
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+            }
+        }
         
-        // Draw segment slightly smaller than grid for blocky look
-        ctx.fillRect(snake[i].x * gridSize + 2, snake[i].y * gridSize + 2, gridSize - 4, gridSize - 4);
+        // Connect to mouse
+        const dxMouse = particles[i].x - mouseX;
+        const dyMouse = particles[i].y - mouseY;
+        const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
+        
+        if (distMouse < 180) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(0, 245, 255, ${0.3 - distMouse/600})`;
+            ctx.lineWidth = 1.5;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(mouseX, mouseY);
+            ctx.stroke();
+        }
     }
     
-    // Reset canvas drawing state
-    ctx.globalAlpha = 1;
-    ctx.shadowBlur = 0;
+    requestAnimationFrame(animateNetwork);
 }
-
-// Start Game Loop (runs every 100ms)
-setInterval(() => {
-    updateSnake();
-    drawSnakeGame();
-}, 100);
+animateNetwork();
 
 /* ========================================= */
 /* 7. SCROLL REVEAL OBSERVER                 */
