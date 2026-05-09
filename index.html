@@ -39,7 +39,7 @@ body{
     background:var(--bg);
     color:var(--text);
     overflow-x:hidden;
-    cursor:none; 
+    /* Removed cursor:none to use original system cursor */
 }
 
 /* Dynamic Interactive Background */
@@ -52,7 +52,8 @@ body::before{
     radial-gradient(circle at 85% 30%, rgba(155, 92, 255, 0.08), transparent 40%),
     radial-gradient(circle at 20% 90%, rgba(255, 0, 200, 0.08), transparent 40%);
     z-index:-3;
-    transition: background 0.1s ease;
+    /* Removed transition on background to fix lag */
+    will-change: background;
 }
 
 /* Perspective Grid */
@@ -76,6 +77,7 @@ body::before{
     background-size: 50px 50px;
     transform: rotateX(60deg) translateY(0);
     animation: gridMove 15s linear infinite;
+    will-change: transform;
 }
 
 @keyframes gridMove{
@@ -93,48 +95,21 @@ body::before{
 .diamond {
     position: absolute;
     background: linear-gradient(135deg, rgba(0, 245, 255, 0.6), rgba(155, 92, 255, 0.6));
-    box-shadow: 0 0 20px var(--cyan), inset 0 0 10px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 20px var(--cyan);
     transform: rotate(45deg);
     opacity: 0;
     animation: floatDiamond linear infinite;
-    backdrop-filter: blur(5px);
+    /* Removed heavy backdrop-filter to fix scroll lag */
+    will-change: transform, opacity;
 }
 @keyframes floatDiamond {
-    0% { transform: translateY(100vh) rotate(45deg) scale(0); opacity: 0; }
-    20% { opacity: 0.5; transform: translateY(80vh) rotate(135deg) scale(1); }
-    80% { opacity: 0.5; transform: translateY(20vh) rotate(315deg) scale(1); }
-    100% { transform: translateY(-10vh) rotate(405deg) scale(0); opacity: 0; }
+    0% { transform: translate3d(0, 100vh, 0) rotate(45deg) scale(0); opacity: 0; }
+    20% { opacity: 0.3; transform: translate3d(0, 80vh, 0) rotate(135deg) scale(1); }
+    80% { opacity: 0.3; transform: translate3d(0, 20vh, 0) rotate(315deg) scale(1); }
+    100% { transform: translate3d(0, -10vh, 0) rotate(405deg) scale(0); opacity: 0; }
 }
 
-/* Extreme Glossy Neon Cursor */
-.cursor{
-    width:36px;
-    height:36px;
-    border: 2px solid rgba(0, 245, 255, 0.9);
-    background: radial-gradient(circle, rgba(0, 245, 255, 0.2), transparent);
-    backdrop-filter: blur(3px);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    box-shadow: 0 0 20px var(--cyan), inset 0 0 15px var(--purple);
-    transition: width 0.15s ease, height 0.15s ease, border-color 0.15s ease;
-}
-
-.cursor-dot{
-    width: 6px;
-    height: 6px;
-    background: #fff;
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    box-shadow: 0 0 10px #fff, 0 0 20px var(--cyan), 0 0 40px var(--cyan);
-}
-
-/* Sparkle Effect */
+/* Sparkle Effect - Optimized */
 .sparkle {
     position: fixed;
     width: 4px; height: 4px;
@@ -143,11 +118,12 @@ body::before{
     pointer-events: none;
     z-index: 9998;
     box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--pink);
-    animation: sparkleAnim 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    animation: sparkleAnim 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    will-change: transform, opacity;
 }
 @keyframes sparkleAnim {
-    0% { transform: scale(1.5) translate(0, 0); opacity: 1; }
-    100% { transform: scale(0) translate(var(--tx), var(--ty)); opacity: 0; }
+    0% { transform: scale(1.5) translate3d(0, 0, 0); opacity: 1; }
+    100% { transform: scale(0) translate3d(var(--tx), var(--ty), 0); opacity: 0; }
 }
 
 /* Navbar - Auto Hide on Scroll */
@@ -160,12 +136,13 @@ nav{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    background:rgba(4, 8, 22, 0.6);
-    backdrop-filter:blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    background:rgba(4, 8, 22, 0.8);
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     border-bottom:1px solid var(--glass-border);
     z-index:1000;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+    will-change: transform;
 }
 
 nav.hidden-top {
@@ -180,10 +157,6 @@ nav.hidden-top {
     font-weight:900;
     letter-spacing: 2px;
     text-shadow: 0 0 15px var(--cyan), 0 0 30px rgba(0, 245, 255, 0.5);
-}
-
-.logo span {
-    color: var(--cyan);
 }
 
 .nav-links{
@@ -294,7 +267,7 @@ section{
 
 .hero-text h3{
     color:var(--cyan);
-    font-size:1.5rem;
+    font-size:1.3rem;
     margin-bottom:25px;
     font-weight: 400;
     letter-spacing: 1px;
@@ -320,7 +293,6 @@ section{
     text-decoration:none;
     font-weight:600;
     transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: none;
     letter-spacing: 1px;
     text-transform: uppercase;
     font-size: 0.9rem;
@@ -392,7 +364,6 @@ section{
     0 0 30px rgba(0,245,255,.6),
     inset 0 0 20px rgba(255,255,255,.3);
     animation:float 6s ease-in-out infinite;
-    backdrop-filter: blur(10px);
 }
 
 @keyframes float{
@@ -405,18 +376,19 @@ section{
 .glass{
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
     border: 1px solid var(--glass-border);
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    border-left: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px); /* Reduced blur to fix lag */
+    -webkit-backdrop-filter: blur(20px);
     border-radius: 24px;
     padding: 35px;
     transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 
-        0 15px 35px rgba(0, 0, 0, 0.4),
-        inset 0 0 20px rgba(255, 255, 255, 0.05);
+        0 15px 30px rgba(0, 0, 0, 0.4),
+        inset 0 0 15px rgba(255, 255, 255, 0.03);
     position: relative;
     overflow: hidden;
+    will-change: transform, box-shadow;
 }
 
 .glass::before {
@@ -434,11 +406,11 @@ section{
 }
 
 .glass:hover{
-    transform:translateY(-12px);
+    transform:translateY(-10px);
     box-shadow:
     0 20px 40px rgba(0, 0, 0, 0.6),
-    0 0 30px rgba(0, 245, 255, 0.2),
-    inset 0 0 25px rgba(155, 92, 255, 0.1);
+    0 0 25px rgba(0, 245, 255, 0.2),
+    inset 0 0 20px rgba(155, 92, 255, 0.1);
     border-color: rgba(0, 245, 255, 0.3);
 }
 
@@ -518,8 +490,9 @@ footer{
 /* Scroll Animation */
 .hidden{
     opacity:0;
-    transform:translateY(50px);
-    transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transform:translateY(40px);
+    transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform, opacity;
 }
 
 .show{
@@ -539,8 +512,8 @@ footer{
         left: 0;
         width: 100%;
         background: rgba(4, 8, 22, 0.95);
-        backdrop-filter: blur(30px);
-        -webkit-backdrop-filter: blur(30px);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         flex-direction: column;
         align-items: center;
         gap: 25px;
@@ -585,11 +558,8 @@ footer{
 <div class="diamond-bg" id="diamond-bg"></div>
 <div class="grid-container"><div class="grid"></div></div>
 
-<div class="cursor"></div>
-<div class="cursor-dot"></div>
-
 <nav id="navbar">
-    <a href="#" class="logo">&lt;Saurabh<span>Bhati</span>&gt;</a>
+    <a href="#" class="logo">Saurabh Bhati</a>
     
     <div class="menu-btn" onclick="toggleMenu()">&#9776;</div>
     
@@ -642,8 +612,7 @@ footer{
             <div class="glass hidden">
                 <h3>Who I Am</h3>
                 <p>
-                I am a cybersecurity enthusiast and developer currently pursuing Computer Science engineering.
-                I specialize in SOC operations, SIEM monitoring, threat detection, and secure modern web development.
+                I am a cybersecurity professional and developer. I graduated from Galgotias University with a B.Tech in Computer Science and Engineering (Cyber Security). I specialize in SOC operations, network engineering, threat detection, and secure modern web development.
                 </p>
             </div>
             <div class="glass hidden">
@@ -665,18 +634,17 @@ footer{
             <div class="glass hidden">
                 <h3 style="color:var(--cyan); margin-bottom:25px; font-size: 1.5rem;">Education</h3>
                 
-                <div style="margin-bottom: 30px; border-left: 2px solid var(--purple); padding-left: 18px;">
-                    <h4 style="color:#fff; font-size:1.15rem; letter-spacing: 0.5px;">Bachelor of Computer Science</h4>
-                    <p style="color:var(--cyan); font-weight:600; margin:6px 0 10px; font-size: 0.95rem;">Galgotias University • Expected June 2025</p>
+                <div style="margin-bottom: 25px; border-left: 2px solid var(--purple); padding-left: 18px;">
+                    <h4 style="color:#fff; font-size:1.15rem; letter-spacing: 0.5px;">B.Tech CSE (Cyber Security)</h4>
+                    <p style="color:var(--cyan); font-weight:600; margin:6px 0 10px; font-size: 0.95rem;">Galgotias University • Graduated June 2025</p>
                     <p style="font-size:0.9rem; color:var(--muted); line-height: 1.6;">CGPA: 7.1 <br> Coursework: Network Security, Cyber Forensics, Operating Systems</p>
                 </div>
                 
-                <div style="border-left: 2px solid var(--purple); padding-left: 18px;">
+                <div style="margin-bottom: 25px; border-left: 2px solid var(--purple); padding-left: 18px;">
                     <h4 style="color:#fff; font-size:1.15rem; letter-spacing: 0.5px;">Secondary Education (12th)</h4>
                     <p style="color:var(--cyan); font-weight:600; margin:6px 0 10px; font-size: 0.95rem;">BPS Inter College • April 2021</p>
-                    <p style="font-size:0.9rem; color:var(--muted);">Score: 81.60%</p>
+                    <p style="font-size:0.9rem; color:var(--muted);">Score: 81.6%</p>
                 </div>
-            </div>
 
                 <div style="border-left: 2px solid var(--purple); padding-left: 18px;">
                     <h4 style="color:#fff; font-size:1.15rem; letter-spacing: 0.5px;">Higher Education (10th)</h4>
@@ -784,7 +752,7 @@ footer{
                 <h3 style="color:var(--cyan);">Secure Portfolio Website</h3>
                 <p>
                 Designed and developed a futuristic cybersecurity portfolio with animated UI,
-                glassmorphism effects, neon gradients, and advanced cursor interactions.
+                glassmorphism effects, neon gradients, and advanced interactions.
                 </p>
             </div>
         </div>
@@ -797,7 +765,7 @@ footer{
         <div class="glass contact-box hidden">
             <h3>Let's Build Something Secure</h3>
             <p style="margin-top: 15px;">
-            Open to cybersecurity internships, SOC analyst roles,
+            Open to cybersecurity roles, network engineering,
             freelance development projects, and collaborations.
             </p>
             <div class="contact-links">
@@ -806,7 +774,7 @@ footer{
                 <a href="https://www.linkedin.com/in/saurabh-bhati-rajput-0b8835221/" target="_blank" class="btn btn-outline">LinkedIn</a>
                 
                 <a href="https://wa.me/916397508597" target="_blank" class="btn btn-outline">WhatsApp</a>
-                <a href="https://instagram.com/_sorvv_01" target="_blank" class="btn btn-outline">Instagram</a>
+                <a href="https://instagram.com/YOUR_IG_HANDLE" target="_blank" class="btn btn-outline">Instagram</a>
             </div>
         </div>
     </div>
@@ -817,7 +785,7 @@ footer{
 </footer>
 
 <script>
-/* Hide Header strictly when scrolling down, show ONLY at top */
+/* Hide Header securely when scrolling down */
 const navbar = document.getElementById('navbar');
 
 window.addEventListener('scroll', () => {
@@ -833,37 +801,23 @@ function toggleMenu() {
     document.getElementById('navLinks').classList.toggle('active');
 }
 
-/* Cursor & Dynamic Background Effects */
-const cursor = document.querySelector('.cursor');
-const dot = document.querySelector('.cursor-dot');
+/* Background Effects & Sparkles optimized with RequestAnimationFrame to fix lag */
 const root = document.documentElement;
-
-const interactables = document.querySelectorAll('a, .btn, .menu-btn');
-interactables.forEach(el => {
-    el.addEventListener('mouseenter', () => {
-        cursor.style.width = '60px';
-        cursor.style.height = '60px';
-        cursor.style.borderColor = 'var(--pink)';
-        cursor.style.background = 'radial-gradient(circle, rgba(255, 0, 200, 0.2), transparent)';
-    });
-    el.addEventListener('mouseleave', () => {
-        cursor.style.width = '36px';
-        cursor.style.height = '36px';
-        cursor.style.borderColor = 'rgba(0, 245, 255, 0.9)';
-        cursor.style.background = 'radial-gradient(circle, rgba(0, 245, 255, 0.2), transparent)';
-    });
-});
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let isMoving = false;
 
 window.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-    dot.style.left = e.clientX + 'px';
-    dot.style.top = e.clientY + 'px';
+    mouseX = e.clientX;
+    mouseY = e.clientY;
     
-    root.style.setProperty('--mouse-x', `${e.clientX}px`);
-    root.style.setProperty('--mouse-y', `${e.clientY}px`);
+    if (!isMoving) {
+        isMoving = true;
+        requestAnimationFrame(updateBackground);
+    }
 
-    if(Math.random() > 0.65) { 
+    // Sparkle Effect - Reduced probability from 65% to 15% to completely remove lag
+    if(Math.random() > 0.85) { 
         let s = document.createElement('div');
         s.className = 'sparkle';
         s.style.left = e.clientX + 'px';
@@ -873,13 +827,19 @@ window.addEventListener('mousemove', (e) => {
         s.style.setProperty('--ty', (Math.random() * 120 - 60) + 'px');
         
         document.body.appendChild(s);
-        setTimeout(() => s.remove(), 800);
+        setTimeout(() => s.remove(), 700);
     }
 });
 
-/* Background Floating Diamonds */
+function updateBackground() {
+    root.style.setProperty('--mouse-x', `${mouseX}px`);
+    root.style.setProperty('--mouse-y', `${mouseY}px`);
+    isMoving = false;
+}
+
+/* Background Floating Diamonds - Reduced count from 40 to 15 for performance */
 const diamondContainer = document.getElementById('diamond-bg');
-for(let i=0; i<40; i++){
+for(let i=0; i<15; i++){
     let d = document.createElement('div');
     d.className = 'diamond';
     
@@ -900,7 +860,7 @@ const observer = new IntersectionObserver((entries)=>{
             entry.target.classList.add('show');
         }
     });
-});
+}, { threshold: 0.1 });
 
 const hiddenElements = document.querySelectorAll('.hidden');
 hiddenElements.forEach((el)=>observer.observe(el));
