@@ -37,3 +37,46 @@ To ensure maximum performance and maintainability, the codebase is cleanly separ
 ├── 📄 script.js       # 3D math, canvas rendering, DOM listeners, and Chatbot logic.
 └── 📁 assets/         
     └── 🖼️ profile.jpg # Profile image
+
+🚀 Quick Setup & Installation
+Since this project uses pure vanilla web technologies, no build steps, node modules, or package managers are required.
+
+Clone the repository:
+
+Bash
+git clone [https://github.com/saurabh0601/futuristic-cyber-portfolio.git](https://github.com/saurabh0601/futuristic-cyber-portfolio.git)
+Navigate to the directory:
+
+Bash
+cd futuristic-cyber-portfolio
+Run the project:
+Simply double-click the index.html file to open it in any modern web browser. Alternatively, use a local server extension like VS Code's "Live Server" for the best experience.
+
+🛠️ Customization Guide
+1. Activating the AI Chatbot (Connecting an API)
+By default, the AI Chatbot is in "Demo Mode" to protect API keys. To make it fully functional:
+
+Open script.js.
+
+Locate the sendDemoChat() function.
+
+Replace the simulated setTimeout response with an actual fetch() call to a backend serverless function (like Vercel or Netlify) that securely holds your OpenAI, Groq, or Gemini API key.
+
+2. Adjusting Background Network Density
+To change the number of floating nodes in the background based on performance needs:
+
+Open script.js.
+
+Find the variable: const particleCount = window.innerWidth > 900 ? 80 : 30;
+
+Increase or decrease 80 (for desktop) or 30 (for mobile).
+
+👨‍💻 About the Author
+Saurabh Bhati
+SOC Analyst • Network & System Engineer • Full Stack Developer
+
+I am a cybersecurity professional specializing in SOC operations, network engineering, threat detection, and secure modern web development. Ranked among the Top 4% globally on TryHackMe.
+
+LinkedIn: Saurabh Bhati Rajput
+
+GitHub: @saurabh0601
