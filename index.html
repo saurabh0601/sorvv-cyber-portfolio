@@ -10,433 +10,20 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-<style>
-
-:root{
-    --bg:#040816;
-    --bg2:#0c1226;
-    --cyan:#00f5ff;
-    --purple:#9b5cff;
-    --pink:#ff00c8;
-    --green:#00ffb3;
-    --red: #ff003c;
-    --text:#ffffff;
-    --muted:#aeb8d0;
-    --glass:rgba(255, 255, 255, 0.03);
-    --glass-border:rgba(255, 255, 255, 0.15);
-}
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    scroll-behavior:smooth;
-}
-
-html, body {
-    overflow-x: hidden;
-    width: 100%;
-}
-
-body{
-    font-family:'Inter',sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    cursor:none; 
-}
-
-/* Custom Black/Neon Arrow Cursor */
-.cursor{
-    width: 32px; height: 32px;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" stroke="%2300f5ff" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>');
-    background-size: contain;
-    background-repeat: no-repeat;
-    position: fixed; pointer-events: none; z-index: 9999;
-    filter: drop-shadow(0 0 8px var(--cyan));
-    transform-origin: top left;
-    transition: transform 0.1s ease;
-}
-
-/* Dynamic Interactive Background */
-body::before{
-    content:''; position:fixed; inset:0;
-    background:
-    radial-gradient(circle 600px at var(--mouse-x, 50vw) var(--mouse-y, 50vh), rgba(0, 245, 255, 0.12), transparent 60%),
-    radial-gradient(circle at 85% 30%, rgba(155, 92, 255, 0.08), transparent 40%),
-    radial-gradient(circle at 20% 90%, rgba(255, 0, 200, 0.08), transparent 40%);
-    z-index:-3; will-change: background;
-}
-
-/* Perspective Grid */
-.grid-container {
-    position: fixed; inset: 0; z-index: -2; perspective: 1000px; pointer-events: none;
-}
-
-.grid{
-    position:absolute; width: 200%; height: 200%; top: -50%; left: -50%;
-    background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-    background-size: 50px 50px;
-    transform: rotateX(60deg) translateY(0);
-    animation: gridMove 15s linear infinite; will-change: transform;
-}
-
-@keyframes gridMove{
-    from { transform: rotateX(60deg) translateY(0); }
-    to { transform: rotateX(60deg) translateY(50px); }
-}
-
-/* Floating Diamonds Background Effect */
-.diamond-bg {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    pointer-events: none; z-index: -1; overflow: hidden;
-}
-.diamond {
-    position: absolute;
-    background: linear-gradient(135deg, rgba(0, 245, 255, 0.6), rgba(155, 92, 255, 0.6));
-    box-shadow: 0 0 20px var(--cyan); transform: rotate(45deg); opacity: 0;
-    animation: floatDiamond linear infinite; will-change: transform, opacity;
-}
-@keyframes floatDiamond {
-    0% { transform: translate3d(0, 100vh, 0) rotate(45deg) scale(0); opacity: 0; }
-    20% { opacity: 0.3; transform: translate3d(0, 80vh, 0) rotate(135deg) scale(1); }
-    80% { opacity: 0.3; transform: translate3d(0, 20vh, 0) rotate(315deg) scale(1); }
-    100% { transform: translate3d(0, -10vh, 0) rotate(405deg) scale(0); opacity: 0; }
-}
-
-/* Localized 3D Glass Dent (Pressure Effect) */
-.glass-dent {
-    position: fixed; width: 140px; height: 140px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 50%, transparent 80%);
-    box-shadow: inset 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 245, 255, 0.2);
-    backdrop-filter: blur(10px) brightness(0.6); -webkit-backdrop-filter: blur(10px) brightness(0.6);
-    transform: translate(-50%, -50%) scale(1);
-    pointer-events: none; z-index: 9998;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
-}
-
-/* Sparkle Effect */
-.sparkle {
-    position: fixed; width: 4px; height: 4px; background: #fff; border-radius: 50%;
-    pointer-events: none; z-index: 9998; box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--pink);
-    animation: sparkleAnim 0.7s cubic-bezier(0.25, 1, 0.5, 1) forwards; will-change: transform, opacity;
-}
-@keyframes sparkleAnim {
-    0% { transform: scale(1.5) translate3d(0, 0, 0); opacity: 1; }
-    100% { transform: scale(0) translate3d(var(--tx), var(--ty), 0); opacity: 0; }
-}
-
-/* ----------------------------------------------------- */
-/* AI CHATBOT UI                                         */
-/* ----------------------------------------------------- */
-#chat-widget {
-    position: fixed; bottom: 20px; right: 20px; width: 350px; height: 450px;
-    background: rgba(4, 8, 22, 0.85); border: 1px solid var(--cyan);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-radius: 15px; box-shadow: 0 10px 40px rgba(0, 245, 255, 0.2);
-    display: flex; flex-direction: column; z-index: 10000;
-    transform: translateY(150%); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    overflow: hidden;
-}
-#chat-widget.active { transform: translateY(0); }
-
-#chat-header {
-    padding: 15px; background: rgba(0, 245, 255, 0.1); border-bottom: 1px solid var(--glass-border);
-    display: flex; justify-content: space-between; align-items: center;
-    font-family: 'Orbitron', sans-serif; color: var(--cyan); font-weight: bold; font-size: 1rem;
-}
-#close-chat {
-    background: none; border: none; color: var(--red); font-size: 1.5rem; cursor: pointer;
-    transition: 0.3s; line-height: 1;
-}
-#close-chat:hover { text-shadow: 0 0 10px var(--red); transform: scale(1.2); }
-
-#chat-messages {
-    flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
-}
-#chat-messages::-webkit-scrollbar { width: 5px; }
-#chat-messages::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 5px; }
-
-.message { padding: 10px 15px; border-radius: 10px; font-size: 0.9rem; line-height: 1.5; max-width: 85%; animation: popIn 0.3s ease; }
-@keyframes popIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-.ai-message { background: rgba(0, 245, 255, 0.1); color: #fff; align-self: flex-start; border-left: 3px solid var(--cyan); }
-.user-message { background: rgba(155, 92, 255, 0.1); color: #fff; align-self: flex-end; border-right: 3px solid var(--purple); }
-
-#chat-input-area {
-    padding: 15px; border-top: 1px solid var(--glass-border); display: flex; gap: 10px;
-}
-#chat-input {
-    flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
-    color: #fff; padding: 10px; border-radius: 8px; outline: none; font-family: 'Inter', sans-serif;
-}
-#chat-input:focus { border-color: var(--cyan); }
-#send-chat {
-    background: var(--cyan); color: #000; border: none; padding: 10px 15px; border-radius: 8px;
-    font-weight: bold; cursor: pointer; transition: 0.3s;
-}
-#send-chat:hover { box-shadow: 0 0 15px var(--cyan); }
-
-#chat-toggle-btn {
-    position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
-    background: linear-gradient(135deg, var(--cyan), var(--purple));
-    border-radius: 50%; display: flex; justify-content: center; align-items: center;
-    cursor: pointer; box-shadow: 0 0 20px rgba(0, 245, 255, 0.4); z-index: 9999;
-    transition: 0.3s; font-size: 24px; color: #000; font-family: 'Orbitron';
-}
-#chat-toggle-btn:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(155, 92, 255, 0.6); }
-
-/* ----------------------------------------------------- */
-/* MINI-GAME: STEALTH PROTOCOL (HIDE & SEEK CYBER GAME)  */
-/* ----------------------------------------------------- */
-#hud-score {
-    position: fixed; bottom: 25px; left: 25px; background: rgba(4, 8, 22, 0.85);
-    border: 1px solid var(--glass-border); border-left: 3px solid var(--purple);
-    backdrop-filter: blur(10px); padding: 12px 20px; border-radius: 8px;
-    font-family: 'Orbitron', sans-serif; font-size: 0.9rem; z-index: 1000;
-    box-shadow: 0 0 20px rgba(155, 92, 255, 0.2); letter-spacing: 1px;
-}
-
-.stealth-ghost {
-    position: fixed; width: 60px; height: 60px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.01), transparent);
-    backdrop-filter: blur(12px) contrast(1.2) saturate(1.5); -webkit-backdrop-filter: blur(12px) contrast(1.2) saturate(1.5);
-    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.02);
-    cursor: crosshair !important; z-index: 9996; opacity: 0; transform: scale(0.8);
-    animation: ghostPulse 6s ease-in-out infinite alternate; transition: transform 0.3s;
-}
-.stealth-ghost:hover { box-shadow: inset 0 0 20px rgba(0, 245, 255, 0.2); border-color: rgba(0, 245, 255, 0.3); }
-
-@keyframes ghostPulse {
-    0% { opacity: 0; transform: scale(0.8); }
-    30% { opacity: 1; transform: scale(1.1); } 
-    50% { opacity: 0; transform: scale(0.9); }
-    80% { opacity: 1; transform: scale(1.2); }
-    100% { opacity: 0; transform: scale(0.8); }
-}
-
-.stealth-ghost.detected {
-    animation: none; opacity: 1 !important; background: rgba(0, 245, 255, 0.2);
-    backdrop-filter: none; -webkit-backdrop-filter: none; border: 2px solid var(--cyan);
-    box-shadow: 0 0 30px var(--cyan), inset 0 0 20px var(--cyan); color: #fff;
-    display: flex; justify-content: center; align-items: center; font-family: 'Orbitron', sans-serif;
-    font-size: 10px; font-weight: bold; text-shadow: 0 0 5px #fff; pointer-events: none;
-}
-
-/* ----------------------------------------------------- */
-/* NEW TEXT & CSS ANIMATIONS                             */
-/* ----------------------------------------------------- */
-.cyber-glow-text { animation: textBreathe 3s ease-in-out infinite alternate; }
-@keyframes textBreathe {
-    0% { text-shadow: 0 0 10px rgba(0, 245, 255, 0.2), 0 0 20px rgba(155, 92, 255, 0.2); }
-    100% { text-shadow: 0 0 20px rgba(0, 245, 255, 0.6), 0 0 40px rgba(155, 92, 255, 0.4); }
-}
-
-.typewriter-wrapper {
-    display: inline-block; overflow: hidden; white-space: nowrap;
-    border-right: 3px solid var(--cyan);
-    animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
-    max-width: 100%;
-}
-@keyframes typing { from { width: 0 } to { width: 100% } }
-@keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: var(--cyan); } }
-
-.floating-card { animation: cardFloat 6s ease-in-out infinite alternate; }
-@keyframes cardFloat { 0% { transform: translateY(0px); } 100% { transform: translateY(-8px); } }
-
-/* Navbar */
-nav{
-    position:fixed; top:0; width:100%; height: 75px; padding:0 8%;
-    display:flex; justify-content:space-between; align-items:center;
-    background:rgba(4, 8, 22, 0.8); backdrop-filter:blur(15px); -webkit-backdrop-filter: blur(15px);
-    border-bottom:1px solid var(--glass-border); z-index:1000;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-}
-nav.hidden-top { transform: translateY(-100%); }
-
-.logo{
-    text-decoration:none; color:var(--text); font-size:1.5rem;
-    font-family:'Orbitron',sans-serif; font-weight:900; letter-spacing: 2px;
-    text-shadow: 0 0 15px var(--cyan), 0 0 30px rgba(0, 245, 255, 0.5);
-    animation: textBreathe 3s ease-in-out infinite alternate;
-}
-
-.nav-links{ display:flex; gap:30px; }
-.nav-links a{
-    color: var(--muted); text-decoration:none; transition:.3s; position:relative;
-    font-size: 0.90rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: none;
-}
-.nav-links a::after{
-    content:''; position:absolute; left: 50%; bottom:-5px; width: 0; height: 2px;
-    background:linear-gradient(90deg,var(--cyan),var(--purple)); transition: all .3s ease;
-    transform: translateX(-50%); box-shadow: 0 0 10px var(--cyan);
-}
-.nav-links a:hover{ color: #fff; text-shadow: 0 0 10px var(--cyan); }
-.nav-links a:hover::after{ width: 100%; }
-
-.menu-btn { display: none; color: var(--cyan); font-size: 28px; cursor: pointer; text-shadow: 0 0 10px var(--cyan); }
-
-/* Sections & Containers (Updated for Section Hover 3D) */
-section { padding:130px 8% 80px; position: relative; }
-.container { 
-    max-width:1200px; margin:auto; 
-    /* Ensures the entire section container can tilt smoothly */
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform-style: preserve-3d;
-}
-
-.section-title{
-    font-size:2.8rem; margin-bottom:60px; font-family:'Orbitron',sans-serif;
-    position:relative; display:inline-block; color: #fff; text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-}
-.section-title::after{
-    content:''; position:absolute; left:0; bottom:-12px; width:40%; height:4px;
-    border-radius:20px; background:linear-gradient(90deg,var(--cyan),var(--purple), transparent);
-    box-shadow: 0 0 15px var(--cyan);
-}
-
-/* Hero */
-.hero{ min-height:100vh; display:flex; align-items:center; }
-.hero-content{ display:grid; grid-template-columns:1.2fr .8fr; gap:60px; align-items:center; }
-.hero-text h1{ font-size:4.8rem; line-height:1.15; margin-bottom:20px; font-family:'Orbitron',sans-serif; transform: translateZ(30px); }
-.gradient{ background:linear-gradient(90deg,var(--cyan),var(--purple),var(--pink)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.hero-text h3{ color:var(--cyan); font-size:1.3rem; margin-bottom:25px; font-weight: 400; letter-spacing: 1px; transform: translateZ(20px);}
-.hero-text p{ color:var(--muted); line-height:1.9; margin-bottom:40px; font-size: 1.1rem; transform: translateZ(10px);}
-
-/* Buttons */
-.buttons{ display:flex; gap:20px; flex-wrap:wrap; transform: translateZ(15px); }
-.btn{
-    padding:16px 36px; border-radius: 50px; text-decoration:none; font-weight:600;
-    transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275); letter-spacing: 1px;
-    text-transform: uppercase; font-size: 0.9rem; cursor: none; position: relative; overflow: hidden;
-}
-.btn-primary{ background:linear-gradient(90deg,var(--cyan),var(--purple)); color:#000; box-shadow: 0 0 20px rgba(0,245,255,.4), inset 0 0 10px rgba(255, 255, 255, 0.5); border: none; }
-.btn-outline{ background: rgba(0, 245, 255, 0.05); border: 1px solid var(--cyan); color: var(--cyan); backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(0, 245, 255, 0.1); }
-.btn:hover{ transform:translateY(-5px) scale(1.05); }
-.btn-primary:hover { box-shadow: 0 0 40px rgba(0,245,255,.6), inset 0 0 15px rgba(255, 255, 255, 0.8); }
-.btn-outline:hover { background: rgba(0, 245, 255, 0.15); box-shadow: 0 0 25px rgba(0, 245, 255, 0.4); color: #fff; }
-
-.btn::after {
-    content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transform: skewX(-20deg); transition: 0.5s;
-}
-.btn:hover::after { left: 150%; }
-
-/* Profile Image */
-.hero-image{ display:flex; justify-content:center; position:relative; transform: translateZ(40px); }
-.hero-image::before{
-    content:''; position:absolute; width: 100%; height: 100%; border-radius:50%;
-    background:linear-gradient(45deg,var(--cyan),var(--purple),var(--pink)); filter:blur(50px);
-    opacity:.5; animation:pulse 4s ease-in-out infinite alternate; z-index: 0;
-}
-@keyframes pulse{ 0%{transform:scale(0.9); opacity: 0.4;} 100%{transform:scale(1.1); opacity: 0.6;} }
-.hero-image img{
-    width:350px; height:350px; object-fit:cover; border-radius:50%;
-    border: 3px solid rgba(255, 255, 255, 0.2); position:relative; z-index:2;
-    box-shadow: 0 0 30px rgba(0,245,255,.6), inset 0 0 20px rgba(255,255,255,.3);
-    animation:float 6s ease-in-out infinite;
-}
-@keyframes float{ 0%{transform:translateY(0px) rotate(0deg);} 50%{transform:translateY(-20px) rotate(2deg);} 100%{transform:translateY(0px) rotate(0deg);} }
-
-/* Premium 3D Glossy Glass Cards */
-.glass{
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-    border: 1px solid var(--glass-border); border-top: 1px solid rgba(255, 255, 255, 0.2); border-left: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 24px; padding: 35px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.03);
-    position: relative; overflow: hidden;
-    transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-    transform-style: preserve-3d;
-}
-.glass::before {
-    content: ''; position: absolute; top: 0; left: -150%; width: 100%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transform: skewX(-25deg); transition: all 0.6s ease; pointer-events: none;
-}
-.glass:hover::before { left: 150%; }
-.glass:hover{
-    box-shadow: 0 30px 50px rgba(0, 0, 0, 0.7), 0 0 25px rgba(0, 245, 255, 0.2), inset 0 0 20px rgba(155, 92, 255, 0.1);
-    border-color: rgba(0, 245, 255, 0.3);
-}
-.glass h3 { color: #fff; font-family: 'Orbitron', sans-serif; letter-spacing: 1px; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); transform: translateZ(20px); }
-.glass p, .glass ul, .glass div { color: var(--muted); line-height: 1.8; transform: translateZ(10px); }
-
-/* Grids & Tags */
-.about-grid, .skills-grid, .projects-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:35px; }
-.skill-tags{ display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; transform: translateZ(15px); }
-.tag{ padding:8px 18px; border-radius:30px; background: rgba(0, 245, 255, 0.05); border: 1px solid rgba(0, 245, 255, 0.3); color: var(--cyan); font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; box-shadow: 0 0 10px rgba(0, 245, 255, 0.1); transition: 0.3s; cursor: none; }
-.tag:hover { background: rgba(0, 245, 255, 0.2); box-shadow: 0 0 20px rgba(0, 245, 255, 0.4); color: #fff; transform: translateY(-3px); }
-
-/* Contact & Footer */
-.contact-box{ text-align:center; }
-.contact-links{ display:flex; justify-content:center; gap:20px; margin-top:40px; flex-wrap:wrap; transform: translateZ(20px); }
-footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px solid var(--glass-border); background: rgba(4, 8, 22, 0.8); backdrop-filter: blur(10px); font-size: 0.9rem; letter-spacing: 1px; }
-
-/* Scroll Animation Reveal Classes */
-.hidden{ opacity:0; transform:translateY(60px) scale(0.95); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform, opacity; }
-.show{ opacity:1; transform:translateY(0) scale(1); }
-.delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; }
-
-/* ========================================= */
-/* ANDROID & MOBILE RESPONSIVE LAYOUT FIXES  */
-/* ========================================= */
-
-@media(max-width:900px){
-    .menu-btn { display: block; }
-    .nav-links { position: absolute; top: 75px; left: 0; width: 100%; background: rgba(4, 8, 22, 0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); flex-direction: column; align-items: center; gap: 25px; padding: 40px 0; border-bottom: 1px solid var(--glass-border); transform: translateY(-150%); opacity: 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: -1; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-    .nav-links.active { transform: translateY(0); opacity: 1; }
-    .hero-content{ grid-template-columns:1fr; text-align:center; margin-top: 40px; }
-    .hero-text h1{ font-size: 3.2rem; }
-    .hero-image img{ width: 280px; height: 280px; }
-    .buttons{ justify-content:center; }
-    .typewriter-wrapper { white-space: normal; animation: none; border: none; } 
-    #chat-toggle-btn { bottom: 20px; right: 20px; width: 50px; height: 50px; font-size: 20px; }
-    #chat-widget { width: 90%; right: 5%; bottom: 80px; }
-}
-
-@media(max-width:600px){
-    section { padding: 100px 5% 50px; }
-    .section-title { font-size: 2.2rem; margin-bottom: 40px; }
-    .hero-text h1 { font-size: 2.4rem; line-height: 1.2; }
-    .hero-text h3 { font-size: 1.05rem; }
-    .hero-text p { font-size: 1rem; }
-    .hero-image img { width: 240px; height: 240px; }
-    .hero-image::before { width: 280px; height: 280px; }
-    .glass { padding: 25px 20px; }
-    .about-grid, .skills-grid, .projects-grid { grid-template-columns: 1fr; gap: 25px; }
-    .buttons { flex-direction: column; width: 100%; }
-    .btn { width: 100%; text-align: center; }
-    .contact-links { flex-direction: column; }
-    .contact-links .btn { width: 100%; }
-}
-
-/* Disable Custom Cursors & 3D Effects on Touch Devices (Android/iOS) to prevent lag */
-@media (hover: none) and (pointer: coarse) {
-    .cursor, .sparkle { display: none !important; }
-    body, a, .btn, .tag, .menu-btn { cursor: auto !important; }
-    .glass, .container { transform: none !important; transition: none !important; animation: none !important; } 
-    .floating-card { animation: none !important; }
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+<canvas id="snake-bg"></canvas>
 <div class="diamond-bg" id="diamond-bg"></div>
 <div class="grid-container"><div class="grid"></div></div>
 
-<div id="hud-score">
-    STEALTH THREATS INTERCEPTED: <span id="score-val" style="color: var(--purple); font-weight: bold; font-size: 1.1rem; text-shadow: 0 0 10px var(--purple);">0</span>
-</div>
-
-<div id="chat-toggle-btn">AI</div>
+<div id="chat-toggle-btn" class="tilt-fx">AI</div>
 
 <div id="chat-widget">
     <div id="chat-header">
-        <span>AI ASSISTANT</span>
+        <span>AI ASSISTANT (DEMO)</span>
         <button id="close-chat">&times;</button>
     </div>
     <div id="chat-messages">
@@ -465,10 +52,9 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
     </div>
 </nav>
 
-
 <section class="hero" id="hero-sec">
     <div class="container hero-content">
-        <div class="hero-text hidden">
+        <div class="hero-text tilt-fx hidden">
             <h1 class="cyber-glow-text">
             Cybersecurity <br>
             <span class="gradient">Analyst & Developer</span>
@@ -484,11 +70,11 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
             Focused on futuristic digital infrastructure and resilient secure systems.
             </p>
             <div class="buttons">
-                <a href="https://drive.google.com/file/d/1oSn3JbfXq-9vjyGnNNpjqpE99u7bJQts/view?usp=drive_link" target="_blank" class="btn btn-primary">Download Resume</a>
-                <a href="#contact" class="btn btn-outline">Contact Me</a>
+                <a href="https://drive.google.com/file/d/1oSn3JbfXq-9vjyGnNNpjqpE99u7bJQts/view?usp=drive_link" target="_blank" class="btn btn-primary tilt-fx">Download Resume</a>
+                <a href="#contact" class="btn btn-outline tilt-fx">Contact Me</a>
             </div>
         </div>
-        <div class="hero-image hidden delay-1">
+        <div class="hero-image tilt-fx hidden delay-1">
             <img src="assets/profile.jpg" alt="Saurabh Bhati">
         </div>
     </div>
@@ -498,13 +84,13 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
     <div class="container">
         <h2 class="section-title hidden">About Me</h2>
         <div class="about-grid">
-            <div class="glass floating-card hidden delay-1">
+            <div class="glass floating-card tilt-fx hidden delay-1">
                 <h3>Who I Am</h3>
                 <p>
                 I am a cybersecurity professional and developer. I graduated from Galgotias University with a B.Tech in Computer Science and Engineering (Cyber Security). I specialize in SOC operations, network engineering, threat detection, and secure modern web development.
                 </p>
             </div>
-            <div class="glass floating-card hidden delay-2" style="animation-delay: 1s;">
+            <div class="glass floating-card tilt-fx hidden delay-2" style="animation-delay: 1s;">
                 <h3>Achievements</h3>
                 <p>
                 Ranked among the Top 4% globally on TryHackMe through advanced cybersecurity labs,
@@ -519,7 +105,7 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
     <div class="container">
         <h2 class="section-title hidden">Qualifications</h2>
         <div class="projects-grid">
-            <div class="glass floating-card hidden delay-1">
+            <div class="glass floating-card tilt-fx hidden delay-1">
                 <h3 style="color:var(--cyan); margin-bottom:25px; font-size: 1.5rem;">Education</h3>
                 
                 <div style="margin-bottom: 25px; border-left: 2px solid var(--purple); padding-left: 18px;">
@@ -541,7 +127,7 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
                 </div>
             </div>
 
-            <div class="glass floating-card hidden delay-2" style="animation-delay: 2s;">
+            <div class="glass floating-card tilt-fx hidden delay-2" style="animation-delay: 2s;">
                 <h3 style="color:var(--cyan); margin-bottom:25px; font-size: 1.5rem;">Certifications</h3>
                 
                 <ul style="list-style: none; padding: 0;">
@@ -567,25 +153,25 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
     <div class="container">
         <h2 class="section-title hidden">Technical Skills</h2>
         <div class="skills-grid">
-            <div class="glass floating-card hidden delay-1">
+            <div class="glass floating-card tilt-fx hidden delay-1">
                 <h3>SIEM & Monitoring</h3>
                 <div class="skill-tags">
                     <span class="tag">Splunk</span> <span class="tag">Wazuh</span> <span class="tag">QRadar</span> <span class="tag">MISP</span>
                 </div>
             </div>
-            <div class="glass floating-card hidden delay-2" style="animation-delay: 0.5s;">
+            <div class="glass floating-card tilt-fx hidden delay-2" style="animation-delay: 0.5s;">
                 <h3>Offensive Security</h3>
                 <div class="skill-tags">
                     <span class="tag">Burp Suite</span> <span class="tag">Metasploit</span> <span class="tag">Nmap</span> <span class="tag">Nessus</span>
                 </div>
             </div>
-            <div class="glass floating-card hidden delay-3" style="animation-delay: 1s;">
+            <div class="glass floating-card tilt-fx hidden delay-3" style="animation-delay: 1s;">
                 <h3>Programming</h3>
                 <div class="skill-tags">
                     <span class="tag">Python</span> <span class="tag">JavaScript</span> <span class="tag">Linux</span> <span class="tag">Bash</span>
                 </div>
             </div>
-            <div class="glass floating-card hidden delay-1" style="animation-delay: 1.5s;">
+            <div class="glass floating-card tilt-fx hidden delay-1" style="animation-delay: 1.5s;">
                 <h3>Cloud & Systems</h3>
                 <div class="skill-tags">
                     <span class="tag">AWS</span> <span class="tag">Docker</span> <span class="tag">VMware</span> <span class="tag">Windows</span>
@@ -599,7 +185,7 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
     <div class="container">
         <h2 class="section-title hidden">Experience</h2>
         
-        <div class="glass floating-card hidden delay-1" style="margin-bottom: 30px;">
+        <div class="glass floating-card tilt-fx hidden delay-1" style="margin-bottom: 30px;">
             <h3>Cyber Security Analyst Intern</h3>
             <p style="margin:5px 0 15px; color:var(--cyan); font-weight: 600; letter-spacing: 1px;">
             NetForChoice • Dec 2024 – June 2025
@@ -611,7 +197,7 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
             </p>
         </div>
 
-        <div class="glass floating-card hidden delay-2" style="animation-delay: 1s;">
+        <div class="glass floating-card tilt-fx hidden delay-2" style="animation-delay: 1s;">
             <h3>Senior Assistant Manager – Operations</h3>
             <p style="margin:5px 0 15px; color:var(--pink); font-weight: 600; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255, 0, 200, 0.4);">
             Blinkit • Inventory Stock Management
@@ -627,14 +213,14 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
     <div class="container">
         <h2 class="section-title hidden">Projects</h2>
         <div class="projects-grid">
-            <div class="glass floating-card hidden delay-1">
+            <div class="glass floating-card tilt-fx hidden delay-1">
                 <h3 style="color:var(--cyan);">Network Traffic Analysis Tool</h3>
                 <p>
                 Built a real-time traffic monitoring and anomaly detection system capable
                 of identifying suspicious network activity and visualizing packet analytics.
                 </p>
             </div>
-            <div class="glass floating-card hidden delay-2" style="animation-delay: 1.5s;">
+            <div class="glass floating-card tilt-fx hidden delay-2" style="animation-delay: 1.5s;">
                 <h3 style="color:var(--cyan);">Secure Portfolio Website</h3>
                 <p>
                 Designed and developed a futuristic cybersecurity portfolio with animated UI,
@@ -648,18 +234,18 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
 <section id="contact">
     <div class="container">
         <h2 class="section-title hidden">Contact</h2>
-        <div class="glass floating-card contact-box hidden delay-1">
+        <div class="glass floating-card tilt-fx contact-box hidden delay-1">
             <h3>Let's Build Something Secure</h3>
             <p style="margin-top: 15px;">
             Open to cybersecurity roles, network engineering,
             freelance development projects, and collaborations.
             </p>
             <div class="contact-links">
-                <a href="mailto:souravbhatirajput@gmail.com" class="btn btn-primary">Email Me</a>
-                <a href="https://github.com/saurabh0601" target="_blank" class="btn btn-outline">GitHub</a>
-                <a href="https://www.linkedin.com/in/saurabh-bhati-rajput-0b8835221/" target="_blank" class="btn btn-outline">LinkedIn</a>
-                <a href="https://wa.me/916397508597" target="_blank" class="btn btn-outline">WhatsApp</a>
-                <a href="https://instagram.com/YOUR_IG_HANDLE" target="_blank" class="btn btn-outline">Instagram</a>
+                <a href="mailto:souravbhatirajput@gmail.com" class="btn btn-primary tilt-fx">Email Me</a>
+                <a href="https://github.com/saurabh0601" target="_blank" class="btn btn-outline tilt-fx">GitHub</a>
+                <a href="https://www.linkedin.com/in/saurabh-bhati-rajput-0b8835221/" target="_blank" class="btn btn-outline tilt-fx">LinkedIn</a>
+                <a href="https://wa.me/916397508597" target="_blank" class="btn btn-outline tilt-fx">WhatsApp</a>
+                <a href="https://instagram.com/YOUR_IG_HANDLE" target="_blank" class="btn btn-outline tilt-fx">Instagram</a>
             </div>
         </div>
     </div>
@@ -669,306 +255,6 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
     © 2026 Saurabh Bhati • Futuristic Cybersecurity Portfolio
 </footer>
 
-
-<script>
-/* ========================================= */
-/* 1. SECURE API & AI CHATBOT LOGIC          */
-/* ========================================= */
-const chatToggleBtn = document.getElementById('chat-toggle-btn');
-const chatWidget = document.getElementById('chat-widget');
-const closeChatBtn = document.getElementById('close-chat');
-const sendChatBtn = document.getElementById('send-chat');
-const chatInput = document.getElementById('chat-input');
-const chatMessages = document.getElementById('chat-messages');
-
-// User's provided Google Studio API Key
-const GEMINI_API_KEY = "AIzaSyBev3MdvHRovPiGqErXyJqvpZUaIL6I9bI"; 
-
-chatToggleBtn.addEventListener('click', () => { chatWidget.classList.add('active'); });
-closeChatBtn.addEventListener('click', () => { chatWidget.classList.remove('active'); });
-
-async function sendChatToGemini() {
-    const userText = chatInput.value.trim();
-    if(!userText) return;
-
-    // Display user message
-    const userDiv = document.createElement('div');
-    userDiv.className = 'message user-message';
-    userDiv.innerText = userText;
-    chatMessages.appendChild(userDiv);
-    chatInput.value = '';
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    // Display 'Typing...' AI message
-    const aiDiv = document.createElement('div');
-    aiDiv.className = 'message ai-message';
-    aiDiv.innerText = "Analyzing query...";
-    chatMessages.appendChild(aiDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    // Pre-prompt context to make the AI act like Saurabh's assistant
-    const contextPrompt = `You are a helpful, professional AI assistant for Saurabh Bhati, a Cybersecurity Analyst and Developer. Answer briefly and politely. User asks: ${userText}`;
-
-    try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: contextPrompt }] }]
-            })
-        });
-
-        const data = await response.json();
-        const reply = data.candidates[0].content.parts[0].text;
-        aiDiv.innerText = reply;
-    } catch (error) {
-        aiDiv.innerText = "Connection error. Secure firewall blocked the request.";
-    }
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-sendChatBtn.addEventListener('click', sendChatToGemini);
-chatInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendChatToGemini(); });
-
-
-/* ========================================= */
-/* 2. ENTIRE SECTION PARALLAX 3D MOVEMENT    */
-/* ========================================= */
-const sections = document.querySelectorAll('section');
-sections.forEach(sec => {
-    sec.addEventListener('mousemove', (e) => {
-        if(window.innerWidth > 900) {
-            const container = sec.querySelector('.container');
-            if(!container) return;
-            const rect = sec.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            // Subtle tilt for the entire section container
-            const rotateX = ((y - centerY) / centerY) * -3; 
-            const rotateY = ((x - centerX) / centerX) * 3;
-            
-            container.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        }
-    });
-    
-    sec.addEventListener('mouseleave', () => {
-        if(window.innerWidth > 900) {
-            const container = sec.querySelector('.container');
-            if(container) container.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg)`;
-        }
-    });
-});
-
-/* 3. INDIVIDUAL GLASS CARD 3D TILT */
-const cards = document.querySelectorAll('.glass');
-cards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-        if(window.innerWidth > 900) {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -8; 
-            const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 8;
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
-        }
-    });
-    card.addEventListener('mouseleave', () => {
-        if(window.innerWidth > 900) card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-    });
-});
-
-/* ========================================= */
-/* 4. SCROLL & NAVIGATION FIXES              */
-/* ========================================= */
-const navbar = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 10) { navbar.classList.add('hidden-top'); } 
-    else { navbar.classList.remove('hidden-top'); }
-});
-
-function toggleMenu() { document.getElementById('navLinks').classList.toggle('active'); }
-
-/* ========================================= */
-/* 5. DYNAMIC CURSOR & BACKGROUND TRACKING   */
-/* ========================================= */
-const cursor = document.getElementById('custom-cursor');
-const root = document.documentElement;
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
-let isMoving = false;
-
-window.addEventListener('mousemove', (e) => {
-    if(window.innerWidth > 900 || window.matchMedia("(pointer: fine)").matches) {
-        mouseX = e.clientX; mouseY = e.clientY;
-        cursor.style.left = mouseX + 'px';
-        cursor.style.top = mouseY + 'px';
-        
-        if (!isMoving) {
-            isMoving = true;
-            requestAnimationFrame(() => {
-                root.style.setProperty('--mouse-x', `${mouseX}px`);
-                root.style.setProperty('--mouse-y', `${mouseY}px`);
-                isMoving = false;
-            });
-        }
-
-        /* Trailing Sparkles */
-        if(Math.random() > 0.85) { 
-            let s = document.createElement('div');
-            s.className = 'sparkle';
-            s.style.left = e.clientX + 'px'; s.style.top = e.clientY + 'px';
-            s.style.setProperty('--tx', (Math.random() * 80 - 40) + 'px');
-            s.style.setProperty('--ty', (Math.random() * 80 - 40) + 'px');
-            document.body.appendChild(s);
-            setTimeout(() => s.remove(), 700);
-        }
-    }
-});
-
-/* Interactive Elements Cursor State */
-const interactables = document.querySelectorAll('a, .btn, .menu-btn, .tag, #chat-toggle-btn');
-interactables.forEach(el => {
-    el.addEventListener('mouseenter', () => { if(window.innerWidth > 900) cursor.style.transform = 'scale(1.5)'; });
-    el.addEventListener('mouseleave', () => { if(window.innerWidth > 900) cursor.style.transform = 'scale(1)'; });
-});
-
-/* ========================================= */
-/* 6. LOCALIZED 3D GLASS CLICK PRESSURE      */
-/* ========================================= */
-let currentDent = null;
-window.addEventListener('mousedown', (e) => {
-    if(e.target.closest('.stealth-ghost, #chat-widget, #chat-toggle-btn')) return;
-
-    currentDent = document.createElement('div');
-    currentDent.className = 'glass-dent';
-    currentDent.style.left = e.clientX + 'px';
-    currentDent.style.top = e.clientY + 'px';
-    document.body.appendChild(currentDent);
-    
-    if(window.innerWidth > 900) cursor.style.transform = 'scale(0.8)';
-    
-    const interactive = e.target.closest('.glass, .btn');
-    if(interactive && window.innerWidth > 900) {
-        interactive.style.transform += ' scale3d(0.95, 0.95, 0.95)';
-        interactive.dataset.pressed = "true";
-    }
-});
-
-window.addEventListener('mouseup', () => {
-    if(currentDent) {
-        currentDent.style.opacity = '0';
-        currentDent.style.transform = 'translate(-50%, -50%) scale(1.5)';
-        let d = currentDent;
-        setTimeout(() => d.remove(), 300);
-        currentDent = null;
-    }
-    
-    if(window.innerWidth > 900) cursor.style.transform = 'scale(1)';
-    
-    document.querySelectorAll('[data-pressed="true"]').forEach(el => {
-        el.style.transform = el.style.transform.replace(' scale3d(0.95, 0.95, 0.95)', '');
-        el.dataset.pressed = "false";
-    });
-});
-
-/* ========================================= */
-/* 7. HIDE AND SEEK "STEALTH PROTOCOL" GAME  */
-/* ========================================= */
-let stealthScore = 0;
-const scoreDisplay = document.getElementById('score-val');
-
-function spawnGhostNode() {
-    const ghost = document.createElement('div');
-    ghost.className = 'stealth-ghost';
-    
-    const startX = Math.random() * (window.innerWidth - 100);
-    const startY = Math.random() * (window.innerHeight - 100);
-    ghost.style.left = startX + 'px';
-    ghost.style.top = startY + 'px';
-    
-    const driftX = (Math.random() - 0.5) * 200; 
-    const driftY = (Math.random() - 0.5) * 200;
-    
-    setTimeout(() => {
-        ghost.style.transform = `translate(${driftX}px, ${driftY}px) scale(1)`;
-        ghost.style.transition = "transform 6s linear";
-    }, 50);
-
-    ghost.onmousedown = (e) => {
-        e.stopPropagation(); 
-        if(ghost.classList.contains('detected')) return;
-        
-        ghost.classList.add('detected');
-        ghost.innerText = 'DETECTED';
-        ghost.style.transform += ' scale(1.5)';
-        
-        stealthScore++;
-        scoreDisplay.innerText = stealthScore;
-        scoreDisplay.style.transform = "scale(1.5)";
-        setTimeout(() => scoreDisplay.style.transform = "scale(1)", 200);
-        
-        for(let i=0; i<15; i++){
-            let s = document.createElement('div');
-            s.className = 'sparkle';
-            s.style.background = 'var(--cyan)';
-            s.style.boxShadow = '0 0 15px var(--cyan), 0 0 30px #fff';
-            s.style.width = (Math.random() * 4 + 2) + 'px';
-            s.style.height = s.style.width;
-            s.style.left = e.clientX + 'px'; 
-            s.style.top = e.clientY + 'px';
-            s.style.setProperty('--tx', (Math.random() * 200 - 100) + 'px');
-            s.style.setProperty('--ty', (Math.random() * 200 - 100) + 'px');
-            document.body.appendChild(s);
-            setTimeout(() => s.remove(), 700);
-        }
-        
-        setTimeout(() => {
-            ghost.style.opacity = '0';
-            setTimeout(() => ghost.remove(), 300);
-        }, 600);
-    };
-    
-    document.body.appendChild(ghost);
-    
-    setTimeout(() => {
-        if(ghost.parentElement && !ghost.classList.contains('detected')) {
-            ghost.style.opacity = '0';
-            setTimeout(() => ghost.remove(), 500);
-        }
-    }, 6000);
-}
-
-setInterval(spawnGhostNode, 4000);
-
-/* Background Floating Diamonds */
-const diamondContainer = document.getElementById('diamond-bg');
-if(window.innerWidth > 900) {
-    for(let i=0; i<12; i++){
-        let d = document.createElement('div');
-        d.className = 'diamond';
-        let size = Math.random() * 20 + 5; 
-        d.style.width = size + 'px'; d.style.height = size + 'px';
-        d.style.left = Math.random() * 100 + 'vw';
-        d.style.animationDuration = (Math.random() * 15 + 8) + 's';
-        d.style.animationDelay = (Math.random() * 10) + 's';
-        diamondContainer.appendChild(d);
-    }
-}
-
-/* Scroll Reveal Intersection Observer */
-const observer = new IntersectionObserver((entries)=>{
-    entries.forEach((entry)=>{
-        if(entry.isIntersecting){ entry.target.classList.add('show'); }
-    });
-}, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
-
-const hiddenElements = document.querySelectorAll('.hidden');
-hiddenElements.forEach((el)=>observer.observe(el));
-
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
