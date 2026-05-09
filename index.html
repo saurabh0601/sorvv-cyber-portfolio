@@ -19,6 +19,7 @@
     --purple:#9b5cff;
     --pink:#ff00c8;
     --green:#00ffb3;
+    --red: #ff003c;
     --text:#ffffff;
     --muted:#aeb8d0;
     --glass:rgba(255, 255, 255, 0.03);
@@ -53,7 +54,7 @@ body{
     position: fixed; pointer-events: none; z-index: 9999;
     filter: drop-shadow(0 0 8px var(--cyan));
     transform-origin: top left;
-    transition: transform 0.15s ease;
+    transition: transform 0.1s ease;
 }
 
 /* Dynamic Interactive Background */
@@ -93,25 +94,21 @@ body::before{
     to { transform: rotateX(60deg) translateY(50px); }
 }
 
-/* Localized 3D Glass Click Pressure Effect */
-.pressure-point {
+/* Localized 3D Glass Dent (Pressure Effect) */
+.glass-dent {
     position: fixed;
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    box-shadow: inset 0 15px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 245, 255, 0.2);
-    transform: translate(-50%, -50%);
+    /* Creates a dark, blurry hole simulating deep physical pressure */
+    background: radial-gradient(circle, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 50%, transparent 80%);
+    box-shadow: inset 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 245, 255, 0.2);
+    backdrop-filter: blur(10px) brightness(0.6);
+    -webkit-backdrop-filter: blur(10px) brightness(0.6);
+    transform: translate(-50%, -50%) scale(1);
     pointer-events: none;
     z-index: 9998;
-    animation: pressureAnim 0.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes pressureAnim {
-    0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
-    100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
 }
 
 /* Floating Diamonds Background Effect */
@@ -148,59 +145,47 @@ body::before{
     100% { transform: scale(0) translate3d(var(--tx), var(--ty), 0); opacity: 0; }
 }
 
-/* Mini-Game: Advanced Cyber Core "Rogue Packets" */
+/* Mini-Game: Terminal Hacking Breach */
 #hud-score {
     position: fixed; bottom: 25px; left: 25px;
     background: rgba(4, 8, 22, 0.85);
     border: 1px solid var(--glass-border);
-    border-left: 3px solid var(--green);
+    border-left: 3px solid var(--cyan);
     backdrop-filter: blur(10px);
     padding: 12px 20px; border-radius: 8px;
     font-family: 'Orbitron', sans-serif;
     font-size: 0.9rem; z-index: 1000;
-    box-shadow: 0 0 20px rgba(0, 255, 179, 0.2);
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.2);
     letter-spacing: 1px;
 }
 
-.cyber-target {
+.hack-node {
     position: fixed;
-    width: 45px; height: 45px;
-    border: 2px dashed var(--green);
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,255,179,0.3), transparent);
-    box-shadow: 0 0 15px var(--green), inset 0 0 15px var(--green);
-    z-index: 9996;
+    padding: 8px 12px;
+    background: rgba(10, 0, 0, 0.9);
+    border: 1px solid var(--red);
+    color: var(--red);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 2px;
+    box-shadow: 0 0 15px rgba(255, 0, 60, 0.6);
     cursor: crosshair !important;
-    display: flex; justify-content: center; align-items: center;
-    animation: targetFloat linear infinite, targetRotate 4s linear infinite;
-    transition: transform 0.2s;
+    z-index: 9996;
+    opacity: 0;
+    transform: scale(0.5);
+    animation: hackPopIn 0.4s ease forwards;
+    user-select: none;
+    backdrop-filter: blur(5px);
+}
+.hack-node:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 0 25px var(--red);
+    background: rgba(40, 0, 0, 0.9);
 }
 
-.cyber-target::after {
-    content: '';
-    position: absolute;
-    width: 15px; height: 15px;
-    background: var(--green);
-    border-radius: 50%;
-    box-shadow: 0 0 20px var(--green), 0 0 40px #fff;
-    animation: corePulse 1s alternate infinite;
-}
-
-.cyber-target:hover {
-    transform: scale(1.3) !important;
-    border-color: var(--pink);
-    box-shadow: 0 0 25px var(--pink), inset 0 0 15px var(--pink);
-}
-.cyber-target:hover::after { background: var(--pink); box-shadow: 0 0 20px var(--pink); }
-
-@keyframes targetRotate { 100% { transform: rotate(360deg); } }
-@keyframes corePulse { 0% { transform: scale(0.8); } 100% { transform: scale(1.2); } }
-@keyframes targetFloat {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(60px, -60px); }
-    50% { transform: translate(0, -120px); }
-    75% { transform: translate(-60px, -60px); }
-    100% { transform: translate(0, 0); }
+@keyframes hackPopIn {
+    to { opacity: 0.9; transform: scale(1); }
 }
 
 /* Navbar */
@@ -296,7 +281,7 @@ section{ padding:130px 8% 80px; }
     backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 24px; padding: 35px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.03);
     position: relative; overflow: hidden;
-    transition: box-shadow 0.3s ease, border-color 0.3s ease; 
+    transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
     transform-style: preserve-3d;
 }
 .glass::before {
@@ -361,7 +346,7 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
 @media (hover: none) and (pointer: coarse) {
     .cursor, .sparkle { display: none !important; }
     body, a, .btn, .tag, .menu-btn { cursor: auto !important; }
-    .glass { transform: none !important; transition: none !important; } /* Disable 3D tilt on mobile */
+    .glass { transform: none !important; transition: none !important; } 
 }
 
 </style>
@@ -373,7 +358,7 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
 <div class="grid-container"><div class="grid"></div></div>
 
 <div id="hud-score">
-    ROGUE PACKETS: <span id="score-val" style="color: var(--green); font-weight: bold; font-size: 1.1rem; text-shadow: 0 0 10px var(--green);">0</span>
+    INTRUSIONS BLOCKED: <span id="score-val" style="color: var(--cyan); font-weight: bold; font-size: 1.1rem; text-shadow: 0 0 10px var(--cyan);">0</span>
 </div>
 
 <div class="cursor" id="custom-cursor"></div>
@@ -540,10 +525,10 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
         <div class="glass hidden">
             <h3>Senior Assistant Manager – Operations</h3>
             <p style="margin:5px 0 15px; color:var(--pink); font-weight: 600; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255, 0, 200, 0.4);">
-            Blinkit • Supply Chain & Logistics
+            Blinkit • Inventory Stock Management
             </p>
             <p>
-            Managed comprehensive warehouse operations, ensuring 100% dispatch accuracy and efficient order sorting. Led cross-functional teams to streamline segregation workflows. Directed and maintained the internal warehouse inventory glossary website to monitor stock levels and logistical metrics in real-time.
+            Managed warehouse operations with 100% Putaway & Audit accuracy. Streamlined segregation workflows and monitored real-time stock and logistics data through the internal inventory management system.
             </p>
         </div>
     </div>
@@ -667,79 +652,124 @@ cards.forEach(card => {
     });
     card.addEventListener('mouseleave', () => {
         if(window.innerWidth > 900) {
+            // Restore normal transform and clear any temporary pressed scale
             card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
         }
     });
 });
 
 /* LOCALIZED 3D Glass Click Pressure Effect */
+let currentDent = null;
 window.addEventListener('mousedown', (e) => {
-    // Generate a pressure dent exactly where the mouse is
-    let dent = document.createElement('div');
-    dent.className = 'pressure-point';
-    dent.style.left = e.clientX + 'px';
-    dent.style.top = e.clientY + 'px';
-    document.body.appendChild(dent);
+    // Ignore if clicking on the game node
+    if(e.target.classList.contains('hack-node')) return;
+
+    // 1. Create a deep glass dent overlay precisely at mouse coordinates
+    currentDent = document.createElement('div');
+    currentDent.className = 'glass-dent';
+    currentDent.style.left = e.clientX + 'px';
+    currentDent.style.top = e.clientY + 'px';
+    document.body.appendChild(currentDent);
     
-    // Scale down cursor on click
+    // Scale down cursor
     if(window.innerWidth > 900) cursor.style.transform = 'scale(0.8)';
     
-    // Remove the dent element after animation finishes
-    setTimeout(() => dent.remove(), 500);
+    // 2. If clicking on an actual card/button, make it physically press deep down
+    const interactive = e.target.closest('.glass, .btn');
+    if(interactive && window.innerWidth > 900) {
+        // Appending scale3d(0.95) to push it backwards
+        interactive.style.transform += ' scale3d(0.95, 0.95, 0.95)';
+        interactive.dataset.pressed = "true";
+    }
 });
 
 window.addEventListener('mouseup', () => {
+    // Release dent effect
+    if(currentDent) {
+        currentDent.style.opacity = '0';
+        currentDent.style.transform = 'translate(-50%, -50%) scale(1.5)';
+        let d = currentDent;
+        setTimeout(() => d.remove(), 300);
+        currentDent = null;
+    }
+    
     if(window.innerWidth > 900) cursor.style.transform = 'scale(1)';
+    
+    // Release card physical press
+    document.querySelectorAll('[data-pressed="true"]').forEach(el => {
+        el.style.transform = el.style.transform.replace(' scale3d(0.95, 0.95, 0.95)', '');
+        el.dataset.pressed = "false";
+    });
 });
 
-/* Cyber Game Mechanics: Rogue Packets */
+/* Cyber Game Mechanics: Terminal Hacking Breach */
 let score = 0;
 const scoreDisplay = document.getElementById('score-val');
 
-function spawnCyberTarget() {
-    const target = document.createElement('div');
-    target.className = 'cyber-target';
-    
-    // Spawn within viewport bounds
-    target.style.left = Math.random() * (window.innerWidth - 60) + 'px';
-    target.style.top = Math.random() * (window.innerHeight - 60) + 'px';
-    target.style.animationDuration = (Math.random() * 4 + 4) + 's, 4s'; // Float speed + rotation speed
-    
-    target.onmousedown = (e) => {
-        e.stopPropagation(); // Prevent normal click pressure on game click
-        score++;
-        scoreDisplay.innerText = score;
-        scoreDisplay.style.transform = "scale(1.5)";
-        setTimeout(() => scoreDisplay.style.transform = "scale(1)", 200);
-        
-        // Shatter Effect (Multiple Particles)
-        for(let i=0; i<15; i++){
-            let s = document.createElement('div');
-            s.className = 'sparkle';
-            s.style.background = 'var(--green)';
-            s.style.boxShadow = '0 0 15px var(--green), 0 0 30px #fff';
-            s.style.width = (Math.random() * 4 + 2) + 'px';
-            s.style.height = s.style.width;
-            s.style.left = e.clientX + 'px'; s.style.top = e.clientY + 'px';
-            s.style.setProperty('--tx', (Math.random() * 200 - 100) + 'px');
-            s.style.setProperty('--ty', (Math.random() * 200 - 100) + 'px');
-            document.body.appendChild(s);
-            setTimeout(() => s.remove(), 700);
-        }
-        target.remove();
-    };
-    
-    document.body.appendChild(target);
-    // Disappear if not caught
-    setTimeout(() => { if(target.parentElement) target.remove(); }, 6000);
+function generateHex() {
+    return '0x' + Math.floor(Math.random() * 65535).toString(16).toUpperCase().padStart(4, '0');
 }
 
-// Start spawning rogue packets every 5 seconds
-setInterval(spawnCyberTarget, 5000);
+function spawnHackNode() {
+    const node = document.createElement('div');
+    node.className = 'hack-node';
+    node.innerText = generateHex();
+    
+    // Spawn randomly within window bounds
+    node.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+    node.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+    
+    node.onmousedown = (e) => {
+        e.stopPropagation(); // Prevent page dent from triggering
+        if(node.classList.contains('decrypted')) return;
+        node.classList.add('decrypted');
+        
+        // Decryption Matrix Effect
+        let iterations = 0;
+        let decryptInterval = setInterval(() => {
+            node.innerText = generateHex();
+            iterations++;
+            if(iterations > 8) {
+                clearInterval(decryptInterval);
+                // Success State
+                node.innerText = 'SECURED';
+                node.style.borderColor = 'var(--cyan)';
+                node.style.color = 'var(--cyan)';
+                node.style.boxShadow = '0 0 20px var(--cyan)';
+                node.style.background = 'rgba(0, 40, 40, 0.9)';
+                
+                // Update Score
+                score++;
+                scoreDisplay.innerText = score;
+                scoreDisplay.style.transform = "scale(1.5)";
+                setTimeout(() => scoreDisplay.style.transform = "scale(1)", 200);
+                
+                // Fade out and remove
+                setTimeout(() => {
+                    node.style.opacity = '0';
+                    node.style.transform = 'scale(1.5)';
+                    setTimeout(() => node.remove(), 400);
+                }, 500);
+            }
+        }, 40); // Fast matrix spin
+    };
+    
+    document.body.appendChild(node);
+    
+    // If user misses it, fade out after 5 seconds
+    setTimeout(() => {
+        if(node.parentElement && !node.classList.contains('decrypted')) {
+            node.style.opacity = '0';
+            setTimeout(() => node.remove(), 300);
+        }
+    }, 5000);
+}
+
+// Start spawning breach nodes every 3.5 seconds
+setInterval(spawnHackNode, 3500);
 
 /* Background Floating Diamonds */
 const diamondContainer = document.getElementById('diamond-bg');
-// Only spawn a few on desktop to save performance
 if(window.innerWidth > 900) {
     for(let i=0; i<12; i++){
         let d = document.createElement('div');
