@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>Saurabh Bhati | Futuristic Cybersecurity Portfolio</title>
 
@@ -32,11 +32,15 @@
     scroll-behavior:smooth;
 }
 
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+}
+
 body{
     font-family:'Inter',sans-serif;
     background:var(--bg);
     color:var(--text);
-    overflow-x:hidden;
     cursor:none; /* Using custom arrow cursor */
 }
 
@@ -89,26 +93,25 @@ body::before{
     to { transform: rotateX(60deg) translateY(50px); }
 }
 
-/* 3D Page Click Wrapper */
-#page-content {
-    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform: scale(1);
-}
-
-/* Click Shockwave Ripple */
-.ripple {
+/* Localized 3D Glass Click Pressure Effect */
+.pressure-point {
     position: fixed;
-    border: 2px solid var(--cyan);
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,0,0,0.5) 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: inset 0 15px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 245, 255, 0.2);
     transform: translate(-50%, -50%);
     pointer-events: none;
     z-index: 9998;
-    animation: rippleAnim 0.6s ease-out forwards;
+    animation: pressureAnim 0.5s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
 }
 
-@keyframes rippleAnim {
-    0% { width: 10px; height: 10px; opacity: 1; border-width: 4px; box-shadow: 0 0 20px var(--cyan); }
-    100% { width: 150px; height: 150px; opacity: 0; border-width: 1px; box-shadow: 0 0 0 var(--cyan); }
+@keyframes pressureAnim {
+    0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
 }
 
 /* Floating Diamonds Background Effect */
@@ -145,45 +148,66 @@ body::before{
     100% { transform: scale(0) translate3d(var(--tx), var(--ty), 0); opacity: 0; }
 }
 
-/* Mini-Game: Threat Hunter HUD & Bugs */
+/* Mini-Game: Advanced Cyber Core "Rogue Packets" */
 #hud-score {
     position: fixed; bottom: 25px; left: 25px;
     background: rgba(4, 8, 22, 0.85);
     border: 1px solid var(--glass-border);
-    border-left: 3px solid var(--pink);
+    border-left: 3px solid var(--green);
     backdrop-filter: blur(10px);
     padding: 12px 20px; border-radius: 8px;
     font-family: 'Orbitron', sans-serif;
     font-size: 0.9rem; z-index: 1000;
-    box-shadow: 0 0 20px rgba(255, 0, 200, 0.2);
+    box-shadow: 0 0 20px rgba(0, 255, 179, 0.2);
     letter-spacing: 1px;
 }
-.malware-bug {
-    position: fixed; width: 35px; height: 35px;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff00c8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>');
-    background-size: contain; background-repeat: no-repeat;
-    cursor: crosshair !important; z-index: 9997;
-    filter: drop-shadow(0 0 15px var(--pink));
-    animation: bugFloat linear infinite;
+
+.cyber-target {
+    position: fixed;
+    width: 45px; height: 45px;
+    border: 2px dashed var(--green);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,255,179,0.3), transparent);
+    box-shadow: 0 0 15px var(--green), inset 0 0 15px var(--green);
+    z-index: 9996;
+    cursor: crosshair !important;
+    display: flex; justify-content: center; align-items: center;
+    animation: targetFloat linear infinite, targetRotate 4s linear infinite;
     transition: transform 0.2s;
 }
-.malware-bug:hover {
-    transform: scale(1.3);
-    filter: drop-shadow(0 0 25px var(--pink));
-}
-@keyframes bugFloat {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(50px, -50px) rotate(15deg); }
-    50% { transform: translate(0, -100px) rotate(-15deg); }
-    75% { transform: translate(-50px, -50px) rotate(15deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
+
+.cyber-target::after {
+    content: '';
+    position: absolute;
+    width: 15px; height: 15px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 20px var(--green), 0 0 40px #fff;
+    animation: corePulse 1s alternate infinite;
 }
 
-/* Navbar - Auto Hide on Scroll */
+.cyber-target:hover {
+    transform: scale(1.3) !important;
+    border-color: var(--pink);
+    box-shadow: 0 0 25px var(--pink), inset 0 0 15px var(--pink);
+}
+.cyber-target:hover::after { background: var(--pink); box-shadow: 0 0 20px var(--pink); }
+
+@keyframes targetRotate { 100% { transform: rotate(360deg); } }
+@keyframes corePulse { 0% { transform: scale(0.8); } 100% { transform: scale(1.2); } }
+@keyframes targetFloat {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(60px, -60px); }
+    50% { transform: translate(0, -120px); }
+    75% { transform: translate(-60px, -60px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Navbar */
 nav{
     position:fixed; top:0; width:100%; height: 75px; padding:0 8%;
     display:flex; justify-content:space-between; align-items:center;
-    background:rgba(4, 8, 22, 0.8); backdrop-filter:blur(15px);
+    background:rgba(4, 8, 22, 0.8); backdrop-filter:blur(15px); -webkit-backdrop-filter: blur(15px);
     border-bottom:1px solid var(--glass-border); z-index:1000;
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
 }
@@ -210,7 +234,7 @@ nav.hidden-top { transform: translateY(-100%); }
 .nav-links a:hover::after{ width: 100%; }
 
 .menu-btn {
-    display: none; color: var(--cyan); font-size: 28px; cursor: none;
+    display: none; color: var(--cyan); font-size: 28px; cursor: pointer;
     text-shadow: 0 0 10px var(--cyan);
 }
 
@@ -269,10 +293,10 @@ section{ padding:130px 8% 80px; }
 .glass{
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
     border: 1px solid var(--glass-border); border-top: 1px solid rgba(255, 255, 255, 0.2); border-left: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(20px); border-radius: 24px; padding: 35px;
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 24px; padding: 35px;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), inset 0 0 15px rgba(255, 255, 255, 0.03);
     position: relative; overflow: hidden;
-    transition: box-shadow 0.3s ease, border-color 0.3s ease; /* Exclude transform from CSS transition so JS 3D tilt handles it smoothly */
+    transition: box-shadow 0.3s ease, border-color 0.3s ease; 
     transform-style: preserve-3d;
 }
 .glass::before {
@@ -303,16 +327,43 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
 .hidden{ opacity:0; transform:translateY(40px); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform, opacity; }
 .show{ opacity:1; transform:translateY(0); }
 
-/* Mobile */
+/* ========================================= */
+/* ANDROID & MOBILE RESPONSIVE LAYOUT FIXES  */
+/* ========================================= */
+
 @media(max-width:900px){
     .menu-btn { display: block; }
-    .nav-links { position: absolute; top: 75px; left: 0; width: 100%; background: rgba(4, 8, 22, 0.95); backdrop-filter: blur(20px); flex-direction: column; align-items: center; gap: 25px; padding: 40px 0; border-bottom: 1px solid var(--glass-border); transform: translateY(-150%); opacity: 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: -1; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+    .nav-links { position: absolute; top: 75px; left: 0; width: 100%; background: rgba(4, 8, 22, 0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); flex-direction: column; align-items: center; gap: 25px; padding: 40px 0; border-bottom: 1px solid var(--glass-border); transform: translateY(-150%); opacity: 0; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); z-index: -1; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
     .nav-links.active { transform: translateY(0); opacity: 1; }
-    .hero-content{ grid-template-columns:1fr; text-align:center; margin-top: 60px; }
-    .hero-text h1{ font-size:3.5rem; }
-    .hero-image img{ width:280px; height:280px; }
+    .hero-content{ grid-template-columns:1fr; text-align:center; margin-top: 40px; }
+    .hero-text h1{ font-size: 3.2rem; }
+    .hero-image img{ width: 280px; height: 280px; }
     .buttons{ justify-content:center; }
 }
+
+@media(max-width:600px){
+    section { padding: 100px 5% 50px; }
+    .section-title { font-size: 2.2rem; margin-bottom: 40px; }
+    .hero-text h1 { font-size: 2.6rem; line-height: 1.2; }
+    .hero-text h3 { font-size: 1.1rem; }
+    .hero-text p { font-size: 1rem; }
+    .hero-image img { width: 240px; height: 240px; }
+    .hero-image::before { width: 280px; height: 280px; }
+    .glass { padding: 25px 20px; }
+    .about-grid, .skills-grid, .projects-grid { grid-template-columns: 1fr; gap: 25px; }
+    .buttons { flex-direction: column; width: 100%; }
+    .btn { width: 100%; text-align: center; }
+    .contact-links { flex-direction: column; }
+    .contact-links .btn { width: 100%; }
+}
+
+/* Disable Custom Cursors & Effects on Touch Devices (Android/iOS) to prevent lag/bugs */
+@media (hover: none) and (pointer: coarse) {
+    .cursor, .sparkle { display: none !important; }
+    body, a, .btn, .tag, .menu-btn { cursor: auto !important; }
+    .glass { transform: none !important; transition: none !important; } /* Disable 3D tilt on mobile */
+}
+
 </style>
 </head>
 
@@ -322,7 +373,7 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
 <div class="grid-container"><div class="grid"></div></div>
 
 <div id="hud-score">
-    THREATS NEUTRALIZED: <span id="score-val" style="color: var(--cyan); font-weight: bold; font-size: 1.1rem; text-shadow: 0 0 10px var(--cyan);">0</span>
+    ROGUE PACKETS: <span id="score-val" style="color: var(--green); font-weight: bold; font-size: 1.1rem; text-shadow: 0 0 10px var(--green);">0</span>
 </div>
 
 <div class="cursor" id="custom-cursor"></div>
@@ -342,7 +393,6 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
     </div>
 </nav>
 
-<div id="page-content">
 
 <section class="hero">
     <div class="container hero-content">
@@ -496,7 +546,6 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
             Managed comprehensive warehouse operations, ensuring 100% dispatch accuracy and efficient order sorting. Led cross-functional teams to streamline segregation workflows. Directed and maintained the internal warehouse inventory glossary website to monitor stock levels and logistical metrics in real-time.
             </p>
         </div>
-
     </div>
 </section>
 
@@ -546,7 +595,8 @@ footer{ padding:40px 20px; text-align:center; color:var(--muted); border-top:1px
     © 2026 Saurabh Bhati • Futuristic Cybersecurity Portfolio
 </footer>
 
-</div> <script>
+
+<script>
 /* Hide Navbar securely when scrolling down */
 const navbar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
@@ -565,138 +615,142 @@ let mouseY = window.innerHeight / 2;
 let isMoving = false;
 
 window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX; mouseY = e.clientY;
-    cursor.style.left = mouseX + 'px';
-    cursor.style.top = mouseY + 'px';
-    
-    if (!isMoving) {
-        isMoving = true;
-        requestAnimationFrame(() => {
-            root.style.setProperty('--mouse-x', `${mouseX}px`);
-            root.style.setProperty('--mouse-y', `${mouseY}px`);
-            isMoving = false;
-        });
-    }
+    // Only apply if custom cursor is active (prevents mobile bugs)
+    if(window.innerWidth > 900 || window.matchMedia("(pointer: fine)").matches) {
+        mouseX = e.clientX; mouseY = e.clientY;
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+        
+        if (!isMoving) {
+            isMoving = true;
+            requestAnimationFrame(() => {
+                root.style.setProperty('--mouse-x', `${mouseX}px`);
+                root.style.setProperty('--mouse-y', `${mouseY}px`);
+                isMoving = false;
+            });
+        }
 
-    /* Trailing Sparkles */
-    if(Math.random() > 0.85) { 
-        let s = document.createElement('div');
-        s.className = 'sparkle';
-        s.style.left = e.clientX + 'px'; s.style.top = e.clientY + 'px';
-        s.style.setProperty('--tx', (Math.random() * 80 - 40) + 'px');
-        s.style.setProperty('--ty', (Math.random() * 80 - 40) + 'px');
-        document.body.appendChild(s);
-        setTimeout(() => s.remove(), 700);
+        /* Trailing Sparkles */
+        if(Math.random() > 0.85) { 
+            let s = document.createElement('div');
+            s.className = 'sparkle';
+            s.style.left = e.clientX + 'px'; s.style.top = e.clientY + 'px';
+            s.style.setProperty('--tx', (Math.random() * 80 - 40) + 'px');
+            s.style.setProperty('--ty', (Math.random() * 80 - 40) + 'px');
+            document.body.appendChild(s);
+            setTimeout(() => s.remove(), 700);
+        }
     }
 });
 
 /* Interactive Elements Cursor State */
 const interactables = document.querySelectorAll('a, .btn, .menu-btn');
 interactables.forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(1.5)');
-    el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+    el.addEventListener('mouseenter', () => { if(window.innerWidth > 900) cursor.style.transform = 'scale(1.5)'; });
+    el.addEventListener('mouseleave', () => { if(window.innerWidth > 900) cursor.style.transform = 'scale(1)'; });
 });
 
-/* 3D Glass Card Tilt Effect */
+/* 3D Glass Card Tilt Effect (Only on Desktop) */
 const cards = document.querySelectorAll('.glass');
 cards.forEach(card => {
     card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        // Calculate tilt angles based on mouse position
-        const rotateX = ((y - centerY) / centerY) * -8; // Max tilt 8 deg
-        const rotateY = ((x - centerX) / centerX) * 8;
-        
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        if(window.innerWidth > 900) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -8; 
+            const rotateY = ((x - centerX) / centerX) * 8;
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+        }
     });
     card.addEventListener('mouseleave', () => {
-        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        if(window.innerWidth > 900) {
+            card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+        }
     });
 });
 
-/* 3D Page Click Pressure & Ripple Effect */
-const pageContent = document.getElementById('page-content');
+/* LOCALIZED 3D Glass Click Pressure Effect */
 window.addEventListener('mousedown', (e) => {
-    // Make the page sink inwards toward the exact click location
-    let xPercent = (e.clientX / window.innerWidth) * 100;
-    let yPercent = (e.clientY / window.innerHeight) * 100;
+    // Generate a pressure dent exactly where the mouse is
+    let dent = document.createElement('div');
+    dent.className = 'pressure-point';
+    dent.style.left = e.clientX + 'px';
+    dent.style.top = e.clientY + 'px';
+    document.body.appendChild(dent);
     
-    pageContent.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-    pageContent.style.transform = `scale(0.985)`;
-    cursor.style.transform = 'scale(0.8)';
-
-    // Spawn Shockwave Ripple
-    let ripple = document.createElement('div');
-    ripple.className = 'ripple';
-    ripple.style.left = e.clientX + 'px';
-    ripple.style.top = e.clientY + 'px';
-    document.body.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 600);
+    // Scale down cursor on click
+    if(window.innerWidth > 900) cursor.style.transform = 'scale(0.8)';
+    
+    // Remove the dent element after animation finishes
+    setTimeout(() => dent.remove(), 500);
 });
 
 window.addEventListener('mouseup', () => {
-    pageContent.style.transform = `scale(1)`;
-    cursor.style.transform = 'scale(1)';
+    if(window.innerWidth > 900) cursor.style.transform = 'scale(1)';
 });
 
-/* Threat Hunter Mini-Game Mechanics */
+/* Cyber Game Mechanics: Rogue Packets */
 let score = 0;
 const scoreDisplay = document.getElementById('score-val');
 
-function spawnBug() {
-    const bug = document.createElement('div');
-    bug.className = 'malware-bug';
+function spawnCyberTarget() {
+    const target = document.createElement('div');
+    target.className = 'cyber-target';
     
     // Spawn within viewport bounds
-    bug.style.left = Math.random() * (window.innerWidth - 40) + 'px';
-    bug.style.top = Math.random() * (window.innerHeight - 40) + 'px';
-    bug.style.animationDuration = (Math.random() * 4 + 3) + 's'; // Random float speed
+    target.style.left = Math.random() * (window.innerWidth - 60) + 'px';
+    target.style.top = Math.random() * (window.innerHeight - 60) + 'px';
+    target.style.animationDuration = (Math.random() * 4 + 4) + 's, 4s'; // Float speed + rotation speed
     
-    bug.onmousedown = (e) => {
+    target.onmousedown = (e) => {
         e.stopPropagation(); // Prevent normal click pressure on game click
         score++;
         scoreDisplay.innerText = score;
         scoreDisplay.style.transform = "scale(1.5)";
         setTimeout(() => scoreDisplay.style.transform = "scale(1)", 200);
         
-        // Explode into pink sparkles
-        for(let i=0; i<10; i++){
+        // Shatter Effect (Multiple Particles)
+        for(let i=0; i<15; i++){
             let s = document.createElement('div');
             s.className = 'sparkle';
-            s.style.background = 'var(--pink)';
-            s.style.boxShadow = '0 0 10px var(--pink)';
+            s.style.background = 'var(--green)';
+            s.style.boxShadow = '0 0 15px var(--green), 0 0 30px #fff';
+            s.style.width = (Math.random() * 4 + 2) + 'px';
+            s.style.height = s.style.width;
             s.style.left = e.clientX + 'px'; s.style.top = e.clientY + 'px';
-            s.style.setProperty('--tx', (Math.random() * 120 - 60) + 'px');
-            s.style.setProperty('--ty', (Math.random() * 120 - 60) + 'px');
+            s.style.setProperty('--tx', (Math.random() * 200 - 100) + 'px');
+            s.style.setProperty('--ty', (Math.random() * 200 - 100) + 'px');
             document.body.appendChild(s);
             setTimeout(() => s.remove(), 700);
         }
-        bug.remove();
+        target.remove();
     };
     
-    document.body.appendChild(bug);
-    
+    document.body.appendChild(target);
     // Disappear if not caught
-    setTimeout(() => { if(bug.parentElement) bug.remove(); }, 6000);
+    setTimeout(() => { if(target.parentElement) target.remove(); }, 6000);
 }
 
-// Start spawning bugs every 4 seconds
-setInterval(spawnBug, 4000);
+// Start spawning rogue packets every 5 seconds
+setInterval(spawnCyberTarget, 5000);
 
 /* Background Floating Diamonds */
 const diamondContainer = document.getElementById('diamond-bg');
-for(let i=0; i<15; i++){
-    let d = document.createElement('div');
-    d.className = 'diamond';
-    let size = Math.random() * 20 + 5; 
-    d.style.width = size + 'px'; d.style.height = size + 'px';
-    d.style.left = Math.random() * 100 + 'vw';
-    d.style.animationDuration = (Math.random() * 15 + 8) + 's';
-    d.style.animationDelay = (Math.random() * 10) + 's';
-    diamondContainer.appendChild(d);
+// Only spawn a few on desktop to save performance
+if(window.innerWidth > 900) {
+    for(let i=0; i<12; i++){
+        let d = document.createElement('div');
+        d.className = 'diamond';
+        let size = Math.random() * 20 + 5; 
+        d.style.width = size + 'px'; d.style.height = size + 'px';
+        d.style.left = Math.random() * 100 + 'vw';
+        d.style.animationDuration = (Math.random() * 15 + 8) + 's';
+        d.style.animationDelay = (Math.random() * 10) + 's';
+        diamondContainer.appendChild(d);
+    }
 }
 
 /* Scroll Reveal */
